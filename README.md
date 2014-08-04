@@ -10,21 +10,39 @@ This project is under development and there are no releases, yet! IT DOES NOT WO
 
 * People
 * Projects / Repository -> Only the 1st repository is converted, because Bitbucket can only import issues to a specific repository.
+* Components
 * Milestones
 * Versions
-* Tickets + Comments
+* Tickets
+    * id
+    * status
+    * reporter
+    * assignee
+    * priority / severity
+    * title / summary
+    * createdOn / createdAt
+    * updatedOn / updatedAt
+    * content / description
+    * contentUpdatedOn / updatedOn
+    * component
+    * milestone
+    * comments
 * Components
 * Meta
-    * see File **config.properties**
-    * **default.kind** (default: bug) = [bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
-    * **default.assignee** = [auto_first | username | (can be null)]
-        * *auto_first*: takes the first person found
-        * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
-        * *null / not specified:* no default assignee
-    * **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
-    * **default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
-    * **default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
 * ~~Attachments~~
+
+## Configuration
+
+you can provide a *config.properties* file [TODO how].
+* **default.kind** (default: bug) = [bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
+* **default.assignee** = [auto_first | username | (can be null)]
+    * *auto_first*: takes the first person found
+    * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
+    * *null / not specified:* no default assignee
+* **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
+* **default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
+* **default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
+
 
 ## Usage
 
