@@ -2,6 +2,10 @@
 
 This program converts a backup.xml (Tickets, Milestones, etc.) created from Unfuddle to a JSON that can be importet by Bitbucket.
 
+## WARNING
+
+This project is under development and there are no releases, yet! IT DOES NOT WORK, YET! DON'T USE IT!
+
 ## Usage
 
 ### 1) Create a backup
