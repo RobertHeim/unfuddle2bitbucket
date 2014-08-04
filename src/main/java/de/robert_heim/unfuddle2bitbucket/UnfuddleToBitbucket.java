@@ -25,7 +25,12 @@ package de.robert_heim.unfuddle2bitbucket;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Properties;
+
+import com.google.gson.GsonBuilder;
+
+import de.robert_heim.unfuddle2bitbucket.model.DbJson;
 
 public class UnfuddleToBitbucket {
 
@@ -41,11 +46,13 @@ public class UnfuddleToBitbucket {
 		properties.load(in);
 		in.close();
 
-		StringWriter sw = new StringWriter();
-		BackupToModel bm = new BackupToModel(sw, properties);
-		bm.convert("./backup.xml");
-		bm.getOutput();
-		System.out.println(sw.getBuffer().toString());
-	}
+		BackupToModel bm = new BackupToModel(properties);
+		DbJson dbJson = bm.convert("./backup.xml");
 
+		GsonBuilder gson = new GsonBuilder().setPrettyPrinting();
+
+		gson.registerTypeAdapter(Date.class, new DateTimeSerializer());
+
+		System.out.println(gson.create().toJson(dbJson));
+	}
 }

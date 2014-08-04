@@ -1,8 +1,7 @@
 package de.robert_heim.unfuddle2bitbucket.model;
 
+import java.util.Date;
 import java.util.List;
-
-import org.joda.time.DateTime;
 
 public class Issue {
 	private List<String> watchers;
@@ -14,7 +13,7 @@ public class Issue {
 	@NotNull
 	private Priority priority;
 	@NotNull
-	private DateTime createdOn;
+	private Date createdOn;
 	@NotNull
 	private String title;
 	@NotNull
@@ -25,37 +24,12 @@ public class Issue {
 	private String content;
 	private Person assignee;
 	private Person reporter;
-	private DateTime editedOn;
 	@NotNull
-	private DateTime contentUpdatedOn;
+	private Date contentUpdatedOn;
 	@NotNull
-	private DateTime updatedOn;
+	private Date updatedOn;
 
 	public Issue() {
-	}
-
-	public Issue(List<String> watchers, List<String> voters, Kind kind,
-			Status status, Priority priority, DateTime createdOn, String title,
-			Integer id, Component component, Milestone milestone,
-			Version version, String content, Person assignee, Person reporter,
-			DateTime editedOn, DateTime contentUpdatedOn, DateTime updatedOn) {
-		this.watchers = watchers;
-		this.voters = voters;
-		this.kind = kind;
-		this.status = status;
-		this.priority = priority;
-		this.createdOn = createdOn;
-		this.title = title;
-		this.id = id;
-		this.component = component;
-		this.milestone = milestone;
-		this.version = version;
-		this.content = content;
-		this.assignee = assignee;
-		this.reporter = reporter;
-		this.editedOn = editedOn;
-		this.contentUpdatedOn = contentUpdatedOn;
-		this.updatedOn = updatedOn;
 	}
 
 	public List<String> getWatchers() {
@@ -98,11 +72,11 @@ public class Issue {
 		this.priority = priority;
 	}
 
-	public DateTime getCreatedOn() {
+	public Date getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(DateTime createdOn) {
+	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
 
@@ -170,27 +144,19 @@ public class Issue {
 		this.reporter = reporter;
 	}
 
-	public DateTime getEditedOn() {
-		return editedOn;
-	}
-
-	public void setEditedOn(DateTime editedOn) {
-		this.editedOn = editedOn;
-	}
-
-	public DateTime getContentUpdatedOn() {
+	public Date getContentUpdatedOn() {
 		return contentUpdatedOn;
 	}
 
-	public void setContentUpdatedOn(DateTime contentUpdatedOn) {
+	public void setContentUpdatedOn(Date contentUpdatedOn) {
 		this.contentUpdatedOn = contentUpdatedOn;
 	}
 
-	public DateTime getUpdatedOn() {
+	public Date getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(DateTime updatedOn) {
+	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 

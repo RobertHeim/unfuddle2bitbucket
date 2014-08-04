@@ -1,9 +1,7 @@
 package de.robert_heim.unfuddle2bitbucket;
 
-import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -30,8 +28,6 @@ public class BackupToModel {
 
 	private Properties properties;
 
-	private BufferedWriter output;
-
 	private int nextUniqueCommentsId;
 
 	private List<Issue> issues;
@@ -51,8 +47,7 @@ public class BackupToModel {
 	private List<Version> versions;
 	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version> unfuddleVersions;
 
-	public BackupToModel(Writer writer, Properties properties) {
-		this.output = new BufferedWriter(writer);
+	public BackupToModel(Properties properties) {
 		this.properties = properties;
 		this.nextUniqueCommentsId = 1;
 	}
@@ -62,14 +57,6 @@ public class BackupToModel {
 		Unmarshaller um = context.createUnmarshaller();
 		Account account = (Account) um.unmarshal(new FileReader(file));
 
-		output.append(account.getPeople().get(0).getUsername());
-		output.newLine();
-		output.append("ticket count:"
-				+ account.getProjects().get(0).getTickets().size());
-		output.newLine();
-		output.append("first ticket:"
-				+ account.getProjects().get(0).getTickets().get(0));
-		output.newLine();
 		if (account.getProjects().size() <= 0) {
 			throw new RuntimeException("Could not find any projces");
 		}
@@ -127,7 +114,7 @@ public class BackupToModel {
 			if (null == defaultKind) {
 				defaultKind = Kind.BUG;
 			}
-			meta.setDefaultKind(defaultKind.name());
+			meta.setDefaultKind(defaultKind.getName());
 		}
 
 		String defaultAssignee = properties.getProperty("default.assignee",
@@ -232,9 +219,18 @@ public class BackupToModel {
 		for (Ticket ticket : tickets) {
 			Issue i = new Issue();
 			i.setId(ticket.getId());
+			i.setCreatedOn(ticket.getCreatedAt().toGregorianCalendar()
+					.getTime());
+			i.setUpdatedOn(ticket.getUpdatedAt().toGregorianCalendar()
+					.getTime());
+			i.setContent(ticket.getDescription());
+			i.setTitle(ticket.getSummary());
+			// TODO i.setStatus(ticket.getStatus());
+			// TODO i.setPriority(ticket.getSeverityId());
 			i.setAssignee(findPersonById(ticket.getAssigneeId()));
-			// TODO status
-			// i.setStatus(status);
+			i.setReporter(findPersonById(ticket.getReporterId()));
+			i.setContentUpdatedOn(ticket.getUpdatedAt().toGregorianCalendar()
+					.getTime());
 
 			// component
 			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component unfuddleComponent = findUnfuddleComponentById(ticket
@@ -389,11 +385,6 @@ public class BackupToModel {
 			}
 		}
 		return null;
-	}
-
-	public BufferedWriter getOutput() throws IOException {
-		output.flush();
-		return output;
 	}
 
 }

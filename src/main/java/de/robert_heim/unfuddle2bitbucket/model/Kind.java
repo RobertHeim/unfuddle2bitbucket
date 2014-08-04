@@ -8,6 +8,10 @@ public enum Kind {
 		this.name = name;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public static Kind find(String lowerCase) {
 		for (Kind k : Kind.values()) {
 			if (k.name.equalsIgnoreCase(lowerCase)) {
