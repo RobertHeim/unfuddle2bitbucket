@@ -23,12 +23,15 @@
  */
 package de.robert_heim.unfuddle2bitbucket;
 
+import java.io.StringWriter;
 
 public class UnfuddleToBitbucket {
 
-
 	public static void main(String[] args) throws Exception {
 		// TODO
+		BackupToModel bm = new BackupToModel(new StringWriter());
+		bm.convert("./backup.xml");
+		System.out.println(bm.getOutput());
 	}
 
 }

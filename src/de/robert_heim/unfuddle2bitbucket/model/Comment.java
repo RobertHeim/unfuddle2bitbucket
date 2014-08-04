@@ -1,19 +1,26 @@
 package de.robert_heim.unfuddle2bitbucket.model;
 
-import org.joda.time.DateTime;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 public class Comment {
 	private String content;
 	@NotNull
-	private DateTime createdOn;
+	private XMLGregorianCalendar createdOn;
 	@NotNull
 	private Integer id;
 	@NotNull
 	private Integer issue;
-	private DateTime updatedOn;
+	private XMLGregorianCalendar updatedOn;
 	private String user;
 
-	public Comment() {
+	public Comment(String content, XMLGregorianCalendar createdOn, Integer id,
+			Integer issue, XMLGregorianCalendar updatedOn, String user) {
+		this.content = content;
+		this.createdOn = createdOn;
+		this.id = id;
+		this.issue = issue;
+		this.updatedOn = updatedOn;
+		this.user = user;
 	}
 
 	public String getContent() {
@@ -24,11 +31,11 @@ public class Comment {
 		this.content = content;
 	}
 
-	public DateTime getCreatedOn() {
+	public XMLGregorianCalendar getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(DateTime createdOn) {
+	public void setCreatedOn(XMLGregorianCalendar createdOn) {
 		this.createdOn = createdOn;
 	}
 
@@ -48,11 +55,11 @@ public class Comment {
 		this.issue = issue;
 	}
 
-	public DateTime getUpdatedOn() {
+	public XMLGregorianCalendar getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(DateTime updatedOn) {
+	public void setUpdatedOn(XMLGregorianCalendar updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 

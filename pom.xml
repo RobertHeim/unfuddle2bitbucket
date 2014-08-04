@@ -31,7 +31,7 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<mainClass>unfuddle2bitbucket.UnfuddleToBitbucket</mainClass>
+							<mainClass>de.robert_heim.unfuddle2bitbucket.UnfuddleToBitbucket</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

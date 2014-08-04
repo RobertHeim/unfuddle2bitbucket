@@ -4,21 +4,77 @@ import java.util.List;
 
 public class DbJson {
 	@NotNull
-	List<Issue> issues;
+	private List<Issue> issues;
 	@NotNull
-	List<Comment> comments;
+	private List<Comment> comments;
 	@NotNull
-	List<Attachment> attachments;
+	private List<Attachment> attachments;
 	@NotNull
-	List<Component> components;
-	
+	private List<Component> components;
+
 	@NotNull
-	List<Milestone> milestones;
-	
+	private List<Milestone> milestones;
+
 	@NotNull
-	List<Version> versions;
-	
+	private List<Version> versions;
+
 	@NotNull
-	Meta meta;	
-	
+	private Meta meta;
+
+	public List<Issue> getIssues() {
+		return issues;
+	}
+
+	public void setIssues(List<Issue> issues) {
+		this.issues = issues;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public List<Attachment> getAttachments() {
+		return attachments;
+	}
+
+	public void setAttachments(List<Attachment> attachments) {
+		this.attachments = attachments;
+	}
+
+	public List<Component> getComponents() {
+		return components;
+	}
+
+	public void setComponents(List<Component> components) {
+		this.components = components;
+	}
+
+	public List<Milestone> getMilestones() {
+		return milestones;
+	}
+
+	public void setMilestones(List<Milestone> milestones) {
+		this.milestones = milestones;
+	}
+
+	public List<Version> getVersions() {
+		return versions;
+	}
+
+	public void setVersions(List<Version> versions) {
+		this.versions = versions;
+	}
+
+	public Meta getMeta() {
+		return meta;
+	}
+
+	public void setMeta(Meta meta) {
+		this.meta = meta;
+	}
+
 }
