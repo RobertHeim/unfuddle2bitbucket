@@ -31,8 +31,8 @@ public class BackupToModel {
 
 	private int nextUniqueCommentsId;
 
-	List<Issue> issues;
-	List<Comment> comments;
+	private List<Issue> issues;
+	private List<Comment> comments;
 	private List<Person> people;
 
 	private List<Attachment> attachments;

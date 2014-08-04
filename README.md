@@ -6,6 +6,17 @@ This program converts a backup.xml (Tickets, Milestones, etc.) created from Unfu
 
 This project is under development and there are no releases, yet! IT DOES NOT WORK, YET! DON'T USE IT!
 
+## What is supported?
+
+* People
+* Projects / Repository -> Only the 1st repository is converted, because Bitbucket can only import issues to a specific repository.
+* Milestones
+* Versions
+* Tickets + Comments
+* ~~Attachments~~
+* ~~Components~~ 
+* ~~Meta~~
+
 ## Usage
 
 ### 1) Create a backup
