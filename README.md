@@ -34,7 +34,7 @@ This project is under development and there are no releases, yet! IT DOES NOT WO
 ## Configuration
 
 you can provide a *config.properties* file [TODO how].
-* **default.kind** (default: bug) = [bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
+* **default.kind** (default: bug) = \[bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
 * **default.assignee** = [auto_first | username | (can be null)]
     * *auto_first*: takes the first person found
     * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
@@ -55,7 +55,7 @@ java -jar unfuddle2bitbucket /path/to/backup.xml /path/to/output.json
 ```
 
 ### 3) Import the converted data
-Go to a repository, click on "*Settings*" and there on "*Import & export*". WARNING: **Importing removes all the repository's existing issues. You cannot undo an import.** If you are sure that you want to overwrite all the issues, select the output.json for upload and start the import.
+Go to a repository, click on "*Settings*" and there on "*Import & export*". WARNING: **Importing removes all existing issues from the repository. You cannot undo an import.** If you are sure that you want to overwrite all the issues, select the output.json for upload and start the import.
 
 
 ## Further information
