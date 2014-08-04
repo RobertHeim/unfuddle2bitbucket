@@ -7,8 +7,13 @@ public enum Kind {
 	private Kind(String name) {
 		this.name = name;
 	}
-	@Override
-	public String toString() {
-		return name;
+
+	public static Kind find(String lowerCase) {
+		for (Kind k : Kind.values()) {
+			if (k.name.equalsIgnoreCase(lowerCase)) {
+				return k;
+			}
+		}
+		return null;
 	}
 }

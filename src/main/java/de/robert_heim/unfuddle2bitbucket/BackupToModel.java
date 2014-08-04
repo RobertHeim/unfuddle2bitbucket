@@ -123,7 +123,7 @@ public class BackupToModel {
 	private void convertMeta() {
 		String defaultKindName = properties.getProperty("default.kind", null);
 		if (defaultKindName != null) {
-			Kind defaultKind = Kind.valueOf(defaultKindName.toLowerCase());
+			Kind defaultKind = Kind.find(defaultKindName.toLowerCase());
 			if (null == defaultKind) {
 				defaultKind = Kind.BUG;
 			}
@@ -233,6 +233,8 @@ public class BackupToModel {
 			Issue i = new Issue();
 			i.setId(ticket.getId());
 			i.setAssignee(findPersonById(ticket.getAssigneeId()));
+			// TODO status
+			// i.setStatus(status);
 
 			// component
 			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component unfuddleComponent = findUnfuddleComponentById(ticket
@@ -389,7 +391,9 @@ public class BackupToModel {
 		return null;
 	}
 
-	public Writer getOutput() {
+	public BufferedWriter getOutput() throws IOException {
+		output.flush();
 		return output;
 	}
+
 }
