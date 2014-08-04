@@ -23,7 +23,7 @@ This project is under development and there are no releases, yet! IT DOES NOT WO
         * *null / not specified:* no default assignee
     * **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
     * **default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
-    * default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
+    * **default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
 * ~~Attachments~~
 
 ## Usage
