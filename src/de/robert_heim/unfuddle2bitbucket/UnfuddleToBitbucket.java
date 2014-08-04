@@ -23,13 +23,22 @@
  */
 package de.robert_heim.unfuddle2bitbucket;
 
+import java.io.FileInputStream;
 import java.io.StringWriter;
+import java.util.Properties;
 
 public class UnfuddleToBitbucket {
 
+	private static final String PROPERTIES_FILE = "config.properties";
+
 	public static void main(String[] args) throws Exception {
 		// TODO
-		BackupToModel bm = new BackupToModel(new StringWriter());
+		Properties properties = new Properties();
+		FileInputStream in = new FileInputStream(PROPERTIES_FILE);
+		properties.load(in);
+		in.close();
+
+		BackupToModel bm = new BackupToModel(new StringWriter(), properties);
 		bm.convert("./backup.xml");
 		System.out.println(bm.getOutput());
 	}

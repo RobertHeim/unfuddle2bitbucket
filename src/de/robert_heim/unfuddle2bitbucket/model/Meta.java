@@ -8,8 +8,8 @@ public class Meta {
 	private String defaultMilestone;
 	private String defaultVersion;
 
-	public Meta(String defaultKind) {
-		this.defaultKind = defaultKind;
+	public Meta() {
+		this.defaultKind = Kind.BUG.name();
 	}
 
 	public String getDefaultAssignee() {

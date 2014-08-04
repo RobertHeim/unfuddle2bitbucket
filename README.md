@@ -13,9 +13,18 @@ This project is under development and there are no releases, yet! IT DOES NOT WO
 * Milestones
 * Versions
 * Tickets + Comments
+* Components
+* Meta
+    * see File **config.properties**
+    * **default.kind** (default: bug) = [bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
+    * **defaul.assignee** = [auto_first | username | (can be null)]
+        * *auto_first*: takes the first person found
+        * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
+        * *null / not specified:* no default assignee
+    * **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
+    * default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
+    * default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
 * ~~Attachments~~
-* ~~Components~~ 
-* ~~Meta~~
 
 ## Usage
 
