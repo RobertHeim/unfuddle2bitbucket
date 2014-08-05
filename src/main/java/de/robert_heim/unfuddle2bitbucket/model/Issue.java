@@ -3,6 +3,8 @@ package de.robert_heim.unfuddle2bitbucket.model;
 import java.util.Date;
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Issue {
 	private List<String> watchers;
 	private List<String> voters;
@@ -13,6 +15,7 @@ public class Issue {
 	@NotNull
 	private Priority priority;
 	@NotNull
+	@SerializedName("created_on")
 	private Date createdOn;
 	@NotNull
 	private String title;
@@ -25,8 +28,10 @@ public class Issue {
 	private String assignee;
 	private String reporter;
 	@NotNull
+	@SerializedName("content_updated_on")
 	private Date contentUpdatedOn;
 	@NotNull
+	@SerializedName("updated_on")
 	private Date updatedOn;
 
 	public Issue() {

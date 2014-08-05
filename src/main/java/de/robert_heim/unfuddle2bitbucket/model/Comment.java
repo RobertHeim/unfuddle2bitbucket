@@ -2,14 +2,18 @@ package de.robert_heim.unfuddle2bitbucket.model;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Comment {
 	private String content;
 	@NotNull
+	@SerializedName("created_on")
 	private XMLGregorianCalendar createdOn;
 	@NotNull
 	private Integer id;
 	@NotNull
 	private Integer issue;
+	@SerializedName("udpated_on")
 	private XMLGregorianCalendar updatedOn;
 	private String user;
 

@@ -1,12 +1,24 @@
 package de.robert_heim.unfuddle2bitbucket.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Meta {
 	public static final Kind DEFAULT_KIND = Kind.BUG;
+
+	@SerializedName("default_assignee")
 	private String defaultAssignee;
+
+	@SerializedName("default_component")
 	private String defaultComponent;
+
 	@NotNull
+	@SerializedName("default_kind")
 	private String defaultKind = DEFAULT_KIND.name();
+
+	@SerializedName("default_milestone")
 	private String defaultMilestone;
+
+	@SerializedName("default_version")
 	private String defaultVersion;
 
 	public String getDefaultAssignee() {
