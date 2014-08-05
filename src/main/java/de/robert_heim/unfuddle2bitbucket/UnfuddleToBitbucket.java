@@ -26,9 +26,11 @@ package de.robert_heim.unfuddle2bitbucket;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
@@ -50,11 +52,15 @@ import de.robert_heim.unfuddle2bitbucket.model.DbJson;
 import de.robert_heim.unfuddle2bitbucket.model.Kind;
 import de.robert_heim.unfuddle2bitbucket.model.Priority;
 import de.robert_heim.unfuddle2bitbucket.model.Status;
+import de.robert_heim.unfuddle2bitbucket.serializer.DateSerializer;
+import de.robert_heim.unfuddle2bitbucket.serializer.KindSerializer;
+import de.robert_heim.unfuddle2bitbucket.serializer.PrioritySerializer;
+import de.robert_heim.unfuddle2bitbucket.serializer.StatusSerializer;
 
 public class UnfuddleToBitbucket {
 
 	private static final String APPLICATION_NAME = "unfuddleToBitbucket";
-	private static final String VERSION = "0.1b";
+	private static final String VERSION_FILE = "/version.properties";
 
 	public static void main(String[] args) {
 
@@ -74,7 +80,13 @@ public class UnfuddleToBitbucket {
 					System.exit(0);
 				}
 				if (line.hasOption("v")) {
-					System.out.println("version: " + VERSION);
+					Properties properties = new Properties();
+					InputStream in = UnfuddleToBitbucket.class
+							.getResourceAsStream(VERSION_FILE);
+					properties.load(in);
+					in.close();
+					System.out.println("version: "
+							+ properties.getProperty("version"));
 					System.exit(0);
 				}
 			}
@@ -231,8 +243,8 @@ public class UnfuddleToBitbucket {
 
 		runOptions.addOption(OptionBuilder.withLongOpt("output-file")
 				.isRequired().withValueSeparator('=')
-				.withDescription("the file to write the archive to")
-				.hasArg().withArgName("FILE").create("o"));
+				.withDescription("the file to write the archive to").hasArg()
+				.withArgName("FILE").create("o"));
 
 		// runOptions
 		// .addOption(OptionBuilder
