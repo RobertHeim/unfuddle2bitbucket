@@ -259,7 +259,7 @@ public class BackupToModel {
 						if (null == kind) {
 							kind = Meta.DEFAULT_KIND;
 							System.out
-									.println("Warning: there is no mapping specified for the severity '"
+									.println("Warning: there is no or an invalid mapping specified for the severity '"
 											+ s.getName()
 											+ "'. Using default ('"
 											+ kind

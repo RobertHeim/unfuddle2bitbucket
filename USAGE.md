@@ -66,8 +66,11 @@ You can specify a config-file in JSON-format. The following explains what you ca
 	"userMap":{
 		"MyUnfuddleUser1":"MyBitBucketUser1"
 	},
-	"severity2KindMap":{
-		"MyCustomUnfuddleSeverity":"bug"		// case sensitive!
+	"severity2KindMap":{ 		// case sensitive!
+		"Task":"task",
+		"Defect":"bug",
+		"Feature":"enhancement",
+		"ThinkOf":"proposal"
 	}
 }
 ```
