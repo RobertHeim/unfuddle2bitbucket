@@ -23,6 +23,7 @@
  */
 package de.robert_heim.unfuddle2bitbucket;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -88,21 +89,35 @@ public class UnfuddleToBitbucket {
 						System.out.println(line.getOptionValue("block-size"));
 					}
 
-					String inputFile = line.getOptionValue("i");
-					String outputFile = line.getOptionValue("o");
+					String inputFileName = line.getOptionValue("i");
+					String outputFileName = line.getOptionValue("o");
 
-					BackupToModel bm = new BackupToModel(properties);
-					DbJson dbJson = bm.convert(inputFile);
+					// check that file does not exist
+					File outputFile = new File(outputFileName);
+					if (outputFile.exists()) {
+						System.err
+								.println("Output file does exist, I won't overwrite it. Please provide a path to a file that does not exist.");
+					} else {
+						BackupToModel bm = new BackupToModel(properties);
+						DbJson dbJson = bm.convert(inputFileName);
 
-					GsonBuilder gson = new GsonBuilder();
-					if (line.hasOption("p")) {
-						gson.setPrettyPrinting();
+						GsonBuilder gson = new GsonBuilder();
+						if (line.hasOption("p")) {
+							gson.setPrettyPrinting();
+						}
+						gson.registerTypeAdapter(Date.class,
+								new DateTimeSerializer());
+
+						String result = gson.create().toJson(dbJson);
+						// print to outputFile
+						PrintWriter writer = new PrintWriter(outputFileName,
+								"UTF-8");
+						writer.write(result);
+						writer.close();
+						System.out.println("Done. You can find the result in "
+								+ outputFileName);
 					}
-					gson.registerTypeAdapter(Date.class,
-							new DateTimeSerializer());
 
-					System.out.println(gson.create().toJson(dbJson));
-					// TODO print to outputFile
 				}
 			} catch (ParseException exp) {
 				System.out.println("Error: " + exp.getMessage());
