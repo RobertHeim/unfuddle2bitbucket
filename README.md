@@ -66,7 +66,7 @@ Options:
 
 #### example usage:
 ```
-java -jar unfuddle2bitbucket -p -i /path/to/backup.xml -o /path/to/output.json
+java -jar unfuddleTobitbucket -p -i /path/to/backup.xml -o /path/to/output.json
 ```
 
 ### 3) Import the converted data
