@@ -55,6 +55,10 @@ public class Ticket {
 	@XmlElement(name = "subscription")
 	private List<Subscription> subscriptions;
 
+	@XmlElementWrapper(name = "audit-trails")
+	@XmlElement(name = "event")
+	private List<Event> events;
+
 	public Ticket() {
 	}
 
@@ -184,6 +188,14 @@ public class Ticket {
 
 	public void setSubscriptions(List<Subscription> subscriptions) {
 		this.subscriptions = subscriptions;
+	}
+
+	public List<Event> getEvents() {
+		return events;
+	}
+
+	public void setEvents(List<Event> events) {
+		this.events = events;
 	}
 
 }

@@ -3,6 +3,7 @@ package de.robert_heim.unfuddle2bitbucket;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.JAXBContext;
@@ -15,6 +16,7 @@ import de.robert_heim.unfuddle2bitbucket.model.Component;
 import de.robert_heim.unfuddle2bitbucket.model.DbJson;
 import de.robert_heim.unfuddle2bitbucket.model.Issue;
 import de.robert_heim.unfuddle2bitbucket.model.Kind;
+import de.robert_heim.unfuddle2bitbucket.model.Log;
 import de.robert_heim.unfuddle2bitbucket.model.Meta;
 import de.robert_heim.unfuddle2bitbucket.model.Milestone;
 import de.robert_heim.unfuddle2bitbucket.model.Person;
@@ -22,6 +24,7 @@ import de.robert_heim.unfuddle2bitbucket.model.Priority;
 import de.robert_heim.unfuddle2bitbucket.model.Status;
 import de.robert_heim.unfuddle2bitbucket.model.Version;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
+import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Event;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.IntegerConverter;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Project;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity;
@@ -57,6 +60,8 @@ public class BackupToModel {
 
 	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity> unfuddleSeverities;
 
+	private List<Log> logs;
+
 	public BackupToModel(ConfigJson configJson) {
 		this.configJson = configJson;
 		this.nextUniqueCommentsId = 1;
@@ -84,6 +89,7 @@ public class BackupToModel {
 		this.meta = new Meta();
 		this.milestones = new ArrayList<Milestone>();
 		this.versions = new ArrayList<Version>();
+		this.logs = new ArrayList<Log>();
 
 		convertPeople(account);
 		convertMeta();
@@ -102,6 +108,7 @@ public class BackupToModel {
 		dbJson.setMeta(meta);
 		dbJson.setMilestones(milestones);
 		dbJson.setVersions(versions);
+		dbJson.setLogs(logs);
 		return dbJson;
 
 	}
@@ -414,6 +421,69 @@ public class BackupToModel {
 					}
 				}
 				i.setWatchers(watchers);
+			}
+
+			// events
+			{
+				for (Event e : ticket.getEvents()) {
+					Person p = findPersonById(e.getPersonId());
+					String username = null;
+					if (null != p) {
+						username = p.getName();
+					}
+					boolean eventSupported = false;
+					String changedTo = "";
+					String field = "";
+					Log l = new Log();
+					switch (e.getEvent()) {
+					case "create":
+						eventSupported = true;
+						changedTo = Status.NEW.getName();
+						field = "status";
+						break;
+					case "accept": // no break
+					case "reassign": // no break
+					case "reopen":
+						eventSupported = true;
+						changedTo = Status.OPEN.getName();
+						field = "status";
+						break;
+					case "close": // no break
+					case "resolve":
+						eventSupported = true;
+						changedTo = Status.RESOLVED.getName();
+						field = "status";
+						break;
+					case "update":
+						eventSupported = false;
+						// TODO parse the description for better support, it
+						// contains what happened
+						// to update more than one field, e.g. summary as
+						// well, we need to create 2 logs.
+						// changedTo = "???";
+						// field = "???";
+						break;
+					default:
+						eventSupported = false;
+						break;
+					}
+					if (eventSupported) {
+						Date createdOn = e.getCreatedAt().toGregorianCalendar()
+								.getTime();
+						Comment comment = new Comment(e.getDescription(),
+								createdOn, getUniqueCommentId(),
+								ticket.getId(), createdOn, username);
+						comments.add(comment);
+
+						l.setChangedTo(changedTo);
+						l.setCommentId(comment.getId());
+						l.setCreatedOn(createdOn);
+						l.setField(field);
+						l.setIssue(i.getId());
+						l.setUser(username);
+						logs.add(l);
+					}
+				}
 			}
 
 			this.issues.add(i);

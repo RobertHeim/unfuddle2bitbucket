@@ -14,7 +14,7 @@ All, foreign keys are managed from the converter. However, a user named "unfuddl
 
 ## What is supported?
 
-* People
+* People (they are mappable to bitbucket-accounts)
 * Projects / Repository -> Only the 1st repository is converted, because Bitbucket can only import issues to a specific repository.
 * Components
 * Milestones
@@ -39,8 +39,15 @@ All, foreign keys are managed from the converter. However, a user named "unfuddl
 * Components
 * Meta
 * ~~Attachments~~
-* ~~Events on Ticket and Logs~~
-* ~~Links to Changesets from Tickets and Comments and Logs~~
+* Events on tickets converted to logs:
+    * create ticket
+    * accept ticket
+    * close ticket
+    * reassign ticket
+    * resolve ticket
+    * reopen ticket
+    * ~~update ticket~~ Unfuddle puts the changes from the update in the description - this may contain emailaddresses as plaintext or sometimes the Names (not usernames) and other stuff... which makes it quite complicated to support it. A solution might parse the description-field. It may contain the changed field enclosed in  double-stars (\*\*)
+* ~~Links to Changesets from Tickets, Comments and Logs~~
 
 ## Usage
 

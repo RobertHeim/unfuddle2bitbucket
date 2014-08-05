@@ -19,6 +19,9 @@ public class DbJson {
 	private List<Version> versions;
 
 	@NotNull
+	private List<Log> logs;
+
+	@NotNull
 	private Meta meta;
 
 	public List<Issue> getIssues() {
@@ -67,6 +70,14 @@ public class DbJson {
 
 	public void setVersions(List<Version> versions) {
 		this.versions = versions;
+	}
+
+	public List<Log> getLogs() {
+		return logs;
+	}
+
+	public void setLogs(List<Log> logs) {
+		this.logs = logs;
 	}
 
 	public Meta getMeta() {
