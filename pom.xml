@@ -70,4 +70,11 @@
 			<version>2.4</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>https://github.com/RobertHeim/unfuddle2bitbucket</name>
+			<url>https://github.com/RobertHeim/unfuddle2bitbucket/releases/</url>
+		</repository>
+	</distributionManagement>
 </project>
