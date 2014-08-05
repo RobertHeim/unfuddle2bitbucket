@@ -28,6 +28,8 @@ public class BackupToModel {
 
 	private Properties properties;
 
+	private UsernameMap usernameMap;
+
 	private int nextUniqueCommentsId;
 
 	private List<Issue> issues;
@@ -47,8 +49,9 @@ public class BackupToModel {
 	private List<Version> versions;
 	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version> unfuddleVersions;
 
-	public BackupToModel(Properties properties) {
+	public BackupToModel(Properties properties, UsernameMap usernameMap) {
 		this.properties = properties;
+		this.usernameMap = usernameMap;
 		this.nextUniqueCommentsId = 1;
 	}
 
@@ -203,7 +206,8 @@ public class BackupToModel {
 				.getPeople()) {
 			Person person = new Person();
 			person.setId(unfuddlePerosn.getId());
-			person.setName(unfuddlePerosn.getUsername());
+			String newUsername = usernameMap.lookup(unfuddlePerosn.getUsername(), unfuddlePerosn.getUsername());
+			person.setName(newUsername);
 			this.people.add(person);
 		}
 	}
@@ -227,8 +231,20 @@ public class BackupToModel {
 			i.setTitle(ticket.getSummary());
 			// TODO i.setStatus(ticket.getStatus());
 			// TODO i.setPriority(ticket.getSeverityId());
-			i.setAssignee(findPersonById(ticket.getAssigneeId()));
-			i.setReporter(findPersonById(ticket.getReporterId()));
+
+			{
+				Person assignee = findPersonById(ticket.getAssigneeId());
+				if (null != assignee) {
+					i.setAssignee(assignee.getName());
+				}
+			}
+			{
+				Person reporter = findPersonById(ticket.getReporterId());
+				if (null != reporter) {
+					i.setReporter(reporter.getName());
+				}
+			}
+
 			i.setContentUpdatedOn(ticket.getUpdatedAt().toGregorianCalendar()
 					.getTime());
 

@@ -6,6 +6,10 @@ This program converts a backup.xml (Tickets, Milestones, etc.) created from Unfu
 
 This project is under development and there are no releases, yet! IT DOES NOT WORK, YET! DON'T USE IT!
 
+Certain objects, such as usernames or comments, rely on foreign keys. During an import, Bitbucket silently uses NULL to replace any foreign keys that it cannot resolve (for example, a username that does not exist on Bitbucket).
+
+All, foreign keys are managed from the converter. However, a user named "unfuddleUser1" may exist on Bitbucket with another name, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information.
+
 ## What is supported?
 
 * People

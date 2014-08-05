@@ -39,7 +39,9 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.apache.commons.io.IOUtils;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.robert_heim.unfuddle2bitbucket.model.DbJson;
@@ -83,22 +85,12 @@ public class UnfuddleToBitbucket {
 						in.close();
 					}
 
-					// validate that block-size has been set
-					if (line.hasOption("block-size")) { // print the value of
-														// block-size
-						System.out.println(line.getOptionValue("block-size"));
-					}
-
 					String inputFileName = line.getOptionValue("i");
 					String outputFileName = line.getOptionValue("o");
 
 					boolean writeToOutputFile = true;
-					if (!line.hasOption("fw")) {
-						// check that file does not exist
-						File outputFile = new File(outputFileName);
-						if (outputFile.exists()) {
-							writeToOutputFile = false;
-						}
+					if (!line.hasOption("fw") && fileExists(outputFileName)) {
+						writeToOutputFile = false;
 					}
 
 					if (!writeToOutputFile) {
@@ -106,17 +98,35 @@ public class UnfuddleToBitbucket {
 								.println("Output file does exist. Please provide a path to a file that does not exist or provide the -fw (--force-write) option.");
 					} else {
 
-						BackupToModel bm = new BackupToModel(properties);
+						Gson gson = createAndConfigureGson(line.hasOption("p"));
+						UsernameMap usernameMap = null;
+						if (!line.hasOption("u")) {
+							usernameMap = new UsernameMap();
+						} else {
+							String usernameMapFileName = line
+									.getOptionValue("u");
+							if (!fileExists(usernameMapFileName)) {
+								System.err
+										.println("The specified user-map-file ('"
+												+ usernameMapFileName
+												+ "') does not exist! Quitting.");
+								System.exit(1);
+							} else {
+								FileInputStream userMapInputStream = new FileInputStream(
+										new File(usernameMapFileName));
+
+								String userMapString = IOUtils.toString(
+										userMapInputStream, "UTF-8");
+
+								usernameMap = gson.fromJson(userMapString,
+										UsernameMap.class);
+							}
+						}
+						BackupToModel bm = new BackupToModel(properties,
+								usernameMap);
 						DbJson dbJson = bm.convert(inputFileName);
 
-						GsonBuilder gson = new GsonBuilder();
-						if (line.hasOption("p")) {
-							gson.setPrettyPrinting();
-						}
-						gson.registerTypeAdapter(Date.class,
-								new DateTimeSerializer());
-
-						String result = gson.create().toJson(dbJson);
+						String result = gson.toJson(dbJson);
 						// print to outputFile
 						PrintWriter writer = new PrintWriter(outputFileName,
 								"UTF-8");
@@ -132,6 +142,16 @@ public class UnfuddleToBitbucket {
 				printUsageAndHelp(APPLICATION_NAME, runtimeOptions, System.out);
 			}
 		}
+	}
+
+	private static Gson createAndConfigureGson(boolean prettyPrint) {
+		GsonBuilder gson = new GsonBuilder();
+		if (prettyPrint) {
+			gson.setPrettyPrinting();
+		}
+		gson.registerTypeAdapter(Date.class, new DateTimeSerializer());
+		return gson.create();
+
 	}
 
 	private static void printUsageAndHelp(final String applicationName,
@@ -185,6 +205,7 @@ public class UnfuddleToBitbucket {
 						.withDescription(
 								"print the json in readable format instead of minimizing the output")
 						.create("p"));
+
 		runOptions.addOption(OptionBuilder.withLongOpt("force-write")
 				.withDescription("overwrite the output file if it exists")
 				.create("fw"));
@@ -195,20 +216,20 @@ public class UnfuddleToBitbucket {
 						.withDescription(
 								"use FILE instead of standard config\n"
 										+ "the FILE can contain:\n"
-										+ "|\tdefault.kind=[bug | enhancement | proposal | task]\n"
-										+ "|\t\tif the given value is not within that list, bug is used\n"
-										+ "|\tdefault.assignee=[auto_first | name | (can be null)]\n"
-										+ "|\t\tauto_first: takes the first person found\n"
-										+ "|\t\tname:\tthe given username is set as default\n"
-										+ "|\t\t\tif it does not exist in the people-tag\n"
-										+ "|\t\t\tno user is set as default assignee\n"
-										+ "|\t\tnull / not specified: no default assignee\n"
-										+ "|\tdefault.component=... analogous to default.assignee\n"
-										+ "|\t\tif name is provided, the component must exist in the backup\n"
-										+ "|\tdefault.milestone=... analogous to default.assignee\n"
-										+ "|\t\tif name is provided, the milestone must exist in the backup\n"
-										+ "|\tdefault.version=... analogous to default.assignee\n"
-										+ "|\t\tif name is provided, the version must exist in the backup\n"
+										+ "|default.kind=[bug | enhancement | proposal | task]\n"
+										+ "|\tif the given value is not within that list, bug is used\n"
+										+ "|default.assignee=[auto_first | name | (can be null)]\n"
+										+ "|\tauto_first: takes the first person found\n"
+										+ "|\tname:\tthe given username is set as default\n"
+										+ "|\t\tif it does not exist in the people-tag\n"
+										+ "|\t\tno user is set as default assignee\n"
+										+ "|\tnull / not specified: no default assignee\n"
+										+ "|default.component=... analogous to default.assignee\n"
+										+ "|\tif name is provided, the component must exist in the backup\n"
+										+ "|default.milestone=... analogous to default.assignee\n"
+										+ "|\tif name is provided, the milestone must exist in the backup\n"
+										+ "|default.version=... analogous to default.assignee\n"
+										+ "|\tif name is provided, the version must exist in the backup\n"
 										+ "|").hasArg().withArgName("FILE")
 						.create("c"));
 
@@ -221,6 +242,25 @@ public class UnfuddleToBitbucket {
 				.withDescription("the file to write the JSON-output to")
 				.hasArg().withArgName("FILE").create("o"));
 
+		runOptions
+				.addOption(OptionBuilder
+						.withLongOpt("user-mapping")
+						.withDescription(
+								"a JSON file that maps the users of Unfuddle to those of Bitbucket\n"
+										+ "Format example:\n"
+										+ "|{\n"
+										+ "|  \"userMap\":{\n"
+										+ "|    \"unfuddleUser1\":\"bitbucketUser1\",\n"
+										+ "|    \"unfuddleUser2\":\"bitbucketUser2\",\n"
+										+ "|    \"unfuddleUser...\":\"bitbucketUser...\",\n"
+										+ "|    \"unfuddleUserN\":\"bitbucketUserN\"\n"
+										+ "|  }\n" + "|}").hasArg()
+						.withArgName("FILE").create("u"));
+
 		return runOptions;
+	}
+
+	private static boolean fileExists(String filename) {
+		return new File(filename).exists();
 	}
 }

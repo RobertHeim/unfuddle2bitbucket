@@ -22,8 +22,8 @@ public class Issue {
 	private String milestone;
 	private Version version;
 	private String content;
-	private Person assignee;
-	private Person reporter;
+	private String assignee;
+	private String reporter;
 	@NotNull
 	private Date contentUpdatedOn;
 	@NotNull
@@ -128,19 +128,19 @@ public class Issue {
 		this.content = content;
 	}
 
-	public Person getAssignee() {
+	public String getAssignee() {
 		return assignee;
 	}
 
-	public void setAssignee(Person assignee) {
+	public void setAssignee(String assignee) {
 		this.assignee = assignee;
 	}
 
-	public Person getReporter() {
+	public String getReporter() {
 		return reporter;
 	}
 
-	public void setReporter(Person reporter) {
+	public void setReporter(String reporter) {
 		this.reporter = reporter;
 	}
 
