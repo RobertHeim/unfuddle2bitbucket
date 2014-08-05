@@ -10,19 +10,23 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import de.robert_heim.unfuddle2bitbucket.model.Attachment;
-import de.robert_heim.unfuddle2bitbucket.model.Comment;
-import de.robert_heim.unfuddle2bitbucket.model.Component;
-import de.robert_heim.unfuddle2bitbucket.model.DbJson;
-import de.robert_heim.unfuddle2bitbucket.model.Issue;
-import de.robert_heim.unfuddle2bitbucket.model.Kind;
-import de.robert_heim.unfuddle2bitbucket.model.Log;
-import de.robert_heim.unfuddle2bitbucket.model.Meta;
-import de.robert_heim.unfuddle2bitbucket.model.Milestone;
-import de.robert_heim.unfuddle2bitbucket.model.Person;
-import de.robert_heim.unfuddle2bitbucket.model.Priority;
-import de.robert_heim.unfuddle2bitbucket.model.Status;
-import de.robert_heim.unfuddle2bitbucket.model.Version;
+import de.robert_heim.unfuddle2bitbucket.converters.ComponentsConverter;
+import de.robert_heim.unfuddle2bitbucket.converters.MilestonesConverter;
+import de.robert_heim.unfuddle2bitbucket.converters.PeopleConverter;
+import de.robert_heim.unfuddle2bitbucket.converters.VersionsConverter;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Attachment;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Comment;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Component;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.DbJson;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Issue;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Kind;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Log;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Meta;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Milestone;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Person;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Priority;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Status;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Version;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Event;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.IntegerConverter;
@@ -43,24 +47,22 @@ public class BackupToModel {
 
 	private List<Issue> issues;
 	private List<Comment> comments;
-	private List<Person> people;
 
 	private List<Attachment> attachments;
 
-	private List<Component> components;
-	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component> unfuddleComponents;
-
 	private Meta meta;
-
-	private List<Milestone> milestones;
-	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone> unfuddleMilestones;
-
-	private List<Version> versions;
-	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version> unfuddleVersions;
 
 	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity> unfuddleSeverities;
 
 	private List<Log> logs;
+
+	private ComponentsConverter componentsConverter;
+
+	private MilestonesConverter milestonesConverter;
+
+	private PeopleConverter peopleConverter;
+
+	private VersionsConverter versionsConverter;
 
 	public BackupToModel(ConfigJson configJson) {
 		this.configJson = configJson;
@@ -76,38 +78,39 @@ public class BackupToModel {
 		if (account.getProjects().size() <= 0) {
 			throw new RuntimeException("Could not find any projces");
 		}
-		this.people = new ArrayList<Person>();
 
 		this.attachments = new ArrayList<Attachment>();
 		this.comments = new ArrayList<Comment>();
-		this.components = new ArrayList<Component>();
-		this.unfuddleComponents = new ArrayList<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component>();
-		this.unfuddleMilestones = new ArrayList<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone>();
-		this.unfuddleVersions = new ArrayList<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version>();
+
 		this.unfuddleSeverities = new ArrayList<Severity>();
 		this.issues = new ArrayList<Issue>();
+
 		this.meta = new Meta();
-		this.milestones = new ArrayList<Milestone>();
-		this.versions = new ArrayList<Version>();
+
 		this.logs = new ArrayList<Log>();
 
-		convertPeople(account);
+		this.peopleConverter = new PeopleConverter(configJson);
+		this.componentsConverter = new ComponentsConverter();
+		this.milestonesConverter = new MilestonesConverter();
+		this.versionsConverter = new VersionsConverter();
+
+		peopleConverter.convert(account);
 		convertMeta();
 		Project project = account.getProjects().get(0);
-		convertComponents(project);
-		convertMilestones(project);
-		convertVersions(project);
+		componentsConverter.convert(project);
+		milestonesConverter.convert(project);
+		versionsConverter.convert(project);
 		convertSeverities(project);
 		convertProject(project);
 
 		DbJson dbJson = new DbJson();
 		dbJson.setAttachments(attachments);
 		dbJson.setComments(comments);
-		dbJson.setComponents(components);
+		dbJson.setComponents(componentsConverter.getBitbucketComponents());
 		dbJson.setIssues(issues);
 		dbJson.setMeta(meta);
-		dbJson.setMilestones(milestones);
-		dbJson.setVersions(versions);
+		dbJson.setMilestones(milestonesConverter.getBitbucketEntities());
+		dbJson.setVersions(versionsConverter.getBitbucketEntities());
 		dbJson.setLogs(logs);
 		return dbJson;
 
@@ -125,15 +128,6 @@ public class BackupToModel {
 		}
 	}
 
-	private void convertComponents(Project project) {
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component unfuddleComponent : project
-				.getComponents()) {
-			Component component = new Component(unfuddleComponent.getName());
-			unfuddleComponents.add(unfuddleComponent);
-			components.add(component);
-		}
-	}
-
 	private void convertMeta() {
 		this.meta = configJson.getMeta();
 		String defaultKindName = meta.getDefaultKind();
@@ -148,10 +142,12 @@ public class BackupToModel {
 		String defaultAssignee = meta.getDefaultAssignee();
 		if (defaultAssignee != null) {
 			if ("auto_first".equals(defaultAssignee)) {
-				if (people.size() > 0) {
-					defaultAssignee = people.get(0).getName();
+				if (peopleConverter.getPeople().size() > 0) {
+					defaultAssignee = peopleConverter.getPeople().get(0)
+							.getName();
 				} else {
-					if (null == findPersonByName(defaultAssignee)) {
+					if (null == peopleConverter
+							.findPersonByName(defaultAssignee)) {
 						defaultAssignee = null;
 					}
 				}
@@ -162,10 +158,12 @@ public class BackupToModel {
 		String defaultComponent = meta.getDefaultComponent();
 		if (defaultComponent != null) {
 			if ("auto_first".equals(defaultComponent)) {
-				if (components.size() > 0) {
-					defaultComponent = components.get(0).getName();
+				if (componentsConverter.getBitbucketComponents().size() > 0) {
+					defaultComponent = componentsConverter
+							.getBitbucketComponents().get(0).getName();
 				} else {
-					if (null == findComponentByName(defaultComponent)) {
+					if (null == componentsConverter
+							.findComponentByName(defaultComponent)) {
 						defaultComponent = null;
 					}
 				}
@@ -176,10 +174,12 @@ public class BackupToModel {
 		String defaultMilestone = meta.getDefaultMilestone();
 		if (defaultMilestone != null) {
 			if ("auto_first".equals(defaultMilestone)) {
-				if (milestones.size() > 0) {
-					defaultMilestone = milestones.get(0).getName();
+				if (milestonesConverter.getBitbucketEntities().size() > 0) {
+					defaultMilestone = milestonesConverter
+							.getBitbucketEntities().get(0).getName();
 				} else {
-					if (null == findMilestoneByName(defaultMilestone)) {
+					if (null == milestonesConverter
+							.findBitbucketEntityByName(defaultMilestone)) {
 						defaultMilestone = null;
 					}
 				}
@@ -190,10 +190,12 @@ public class BackupToModel {
 		String defaultVersion = meta.getDefaultVersion();
 		if (defaultVersion != null) {
 			if ("auto_first".equals(defaultVersion)) {
-				if (versions.size() > 0) {
-					defaultVersion = versions.get(0).getName();
+				if (versionsConverter.getBitbucketEntities().size() > 0) {
+					defaultVersion = versionsConverter.getBitbucketEntities()
+							.get(0).getName();
 				} else {
-					if (null == findVersionByName(defaultVersion)) {
+					if (null == versionsConverter
+							.findBitbucketEntityByName(defaultVersion)) {
 						defaultVersion = null;
 					}
 				}
@@ -201,38 +203,6 @@ public class BackupToModel {
 			meta.setDefaultVersion(defaultVersion);
 		}
 
-	}
-
-	private void convertMilestones(Project project) {
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone unfuddleMilestone : project
-				.getMilestones()) {
-			Milestone milestone = new Milestone(unfuddleMilestone.getName());
-			unfuddleMilestones.add(unfuddleMilestone);
-			milestones.add(milestone);
-		}
-	}
-
-	private void convertVersions(Project project) {
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version unfuddleVersion : project
-				.getVersions()) {
-			Version version = new Version(unfuddleVersion.getName());
-			unfuddleVersions.add(unfuddleVersion);
-			versions.add(version);
-		}
-	}
-
-	// ******* //
-
-	private void convertPeople(Account account) {
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Person unfuddlePerosn : account
-				.getPeople()) {
-			Person person = new Person();
-			person.setId(unfuddlePerosn.getId());
-			String newUsername = configJson.lookupUsername(
-					unfuddlePerosn.getUsername(), unfuddlePerosn.getUsername());
-			person.setName(newUsername);
-			this.people.add(person);
-		}
 	}
 
 	private void convertProject(Project project) {
@@ -357,7 +327,8 @@ public class BackupToModel {
 			}
 			// assignee
 			{
-				Person assignee = findPersonById(ticket.getAssigneeId());
+				Person assignee = peopleConverter.findPersonById(ticket
+						.getAssigneeId());
 				if (null != assignee) {
 					i.setAssignee(assignee.getName());
 				}
@@ -365,7 +336,8 @@ public class BackupToModel {
 
 			// reporter
 			{
-				Person reporter = findPersonById(ticket.getReporterId());
+				Person reporter = peopleConverter.findPersonById(ticket
+						.getReporterId());
 				if (null != reporter) {
 					i.setReporter(reporter.getName());
 				}
@@ -375,32 +347,33 @@ public class BackupToModel {
 					.getTime());
 
 			// component
-			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component unfuddleComponent = findUnfuddleComponentById(ticket
-					.getComponentId());
+			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component unfuddleComponent = componentsConverter
+					.findUnfuddleComponentById(ticket.getComponentId());
 			if (null != unfuddleComponent) {
-				Component component = findComponentByName(unfuddleComponent
-						.getName());
+				Component component = componentsConverter
+						.findComponentByName(unfuddleComponent.getName());
 				if (null != component) {
 					i.setComponent(component.getName());
 				}
 			}
 
 			// milestone
-			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone unfuddleMilestone = findUnfuddleMilestoneById(ticket
-					.getMilestoneId());
+			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone unfuddleMilestone = milestonesConverter
+					.findUnfuddleEntityById(ticket.getMilestoneId());
 			if (null != unfuddleMilestone) {
-				Milestone milestone = findMilestoneByName(unfuddleMilestone
-						.getName());
+				Milestone milestone = milestonesConverter
+						.findBitbucketEntityByName(unfuddleMilestone.getName());
 				if (null != milestone) {
 					i.setMilestone(milestone.getName());
 				}
 			}
 
 			// version
-			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version unfuddleVersion = findUnfuddleVersionById(ticket
-					.getVersionId());
+			de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version unfuddleVersion = versionsConverter
+					.findUnfuddleEntityById(ticket.getVersionId());
 			if (null != unfuddleVersion) {
-				Version version = findVersionByName(unfuddleVersion.getName());
+				Version version = versionsConverter
+						.findBitbucketEntityByName(unfuddleVersion.getName());
 				if (null != version) {
 					i.setVersion(version);
 				}
@@ -410,7 +383,7 @@ public class BackupToModel {
 			{
 				List<String> watchers = new ArrayList<String>();
 				for (Subscription s : ticket.getSubscriptions()) {
-					Person p = findPersonById(s.getPersonId());
+					Person p = peopleConverter.findPersonById(s.getPersonId());
 					if (null == p) {
 						System.out
 								.println("WARNING: subscription skipped, because the person with id '"
@@ -426,7 +399,7 @@ public class BackupToModel {
 			// events
 			{
 				for (Event e : ticket.getEvents()) {
-					Person p = findPersonById(e.getPersonId());
+					Person p = peopleConverter.findPersonById(e.getPersonId());
 					String username = null;
 					if (null != p) {
 						username = p.getName();
@@ -496,7 +469,8 @@ public class BackupToModel {
 				.getComments()) {
 
 			String username = null;
-			Person p = findPersonById(unfuddleComment.getAuthorId());
+			Person p = peopleConverter.findPersonById(unfuddleComment
+					.getAuthorId());
 			if (null == p) {
 				System.out
 						.println("Warning: the comment-author with id '"
@@ -522,113 +496,10 @@ public class BackupToModel {
 		return id;
 	}
 
-	/**
-	 * @param id
-	 * @return the person or null
-	 */
-	public Person findPersonById(Integer id) {
-		if (null == people) {
-			return null;
-		}
-		for (Person person : people) {
-			if (person.getId().equals(id)) {
-				return person;
-			}
-		}
-		return null;
-	}
-
-	public de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component findUnfuddleComponentById(
-			Integer id) {
-		if (null == unfuddleComponents) {
-			return null;
-		}
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component component : unfuddleComponents) {
-			if (component.getId().equals(id)) {
-				return component;
-			}
-		}
-		return null;
-	}
-
-	public de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone findUnfuddleMilestoneById(
-			Integer id) {
-		if (null == unfuddleMilestones) {
-			return null;
-		}
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone milestone : unfuddleMilestones) {
-			if (milestone.getId().equals(id)) {
-				return milestone;
-			}
-		}
-		return null;
-	}
-
-	public de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version findUnfuddleVersionById(
-			Integer id) {
-		if (null == unfuddleVersions) {
-			return null;
-		}
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version version : unfuddleVersions) {
-			if (version.getId().equals(id)) {
-				return version;
-			}
-		}
-		return null;
-	}
-
 	private Severity findSeverityById(Integer severityId) {
 		for (Severity s : unfuddleSeverities) {
 			if (s.getId().equals(severityId)) {
 				return s;
-			}
-		}
-		return null;
-	}
-
-	public Person findPersonByName(String name) {
-		if (null == people) {
-			return null;
-		}
-		for (Person person : people) {
-			if (person.getName().equals(name)) {
-				return person;
-			}
-		}
-		return null;
-	}
-
-	public Component findComponentByName(String name) {
-		if (null == components) {
-			return null;
-		}
-		for (Component component : components) {
-			if (component.getName().equals(name)) {
-				return component;
-			}
-		}
-		return null;
-	}
-
-	public Milestone findMilestoneByName(String name) {
-		if (null == milestones) {
-			return null;
-		}
-		for (Milestone milestone : milestones) {
-			if (milestone.getName().equals(name)) {
-				return milestone;
-			}
-		}
-		return null;
-	}
-
-	public Version findVersionByName(String name) {
-		if (null == versions) {
-			return null;
-		}
-		for (Version version : versions) {
-			if (version.getName().equals(name)) {
-				return version;
 			}
 		}
 		return null;

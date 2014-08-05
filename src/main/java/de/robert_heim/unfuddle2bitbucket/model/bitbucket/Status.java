@@ -1,4 +1,4 @@
-package de.robert_heim.unfuddle2bitbucket.model;
+package de.robert_heim.unfuddle2bitbucket.model.bitbucket;
 
 public enum Status {
 	NEW("new"), OPEN("open"), RESOLVED("resolved"), ON_HOLD("on hold"), INVALID(

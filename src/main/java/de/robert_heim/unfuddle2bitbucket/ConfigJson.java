@@ -3,8 +3,8 @@ package de.robert_heim.unfuddle2bitbucket;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.robert_heim.unfuddle2bitbucket.model.Kind;
-import de.robert_heim.unfuddle2bitbucket.model.Meta;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Kind;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Meta;
 
 public class ConfigJson {
 	private Meta meta = new Meta();

@@ -7,7 +7,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-import de.robert_heim.unfuddle2bitbucket.model.Priority;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Priority;
 
 public class PrioritySerializer implements JsonSerializer<Priority> {
 	public JsonElement serialize(Priority src, Type typeOfSrc,

@@ -48,10 +48,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
-import de.robert_heim.unfuddle2bitbucket.model.DbJson;
-import de.robert_heim.unfuddle2bitbucket.model.Kind;
-import de.robert_heim.unfuddle2bitbucket.model.Priority;
-import de.robert_heim.unfuddle2bitbucket.model.Status;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.DbJson;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Kind;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Priority;
+import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Status;
 import de.robert_heim.unfuddle2bitbucket.serializer.DateSerializer;
 import de.robert_heim.unfuddle2bitbucket.serializer.KindSerializer;
 import de.robert_heim.unfuddle2bitbucket.serializer.PrioritySerializer;

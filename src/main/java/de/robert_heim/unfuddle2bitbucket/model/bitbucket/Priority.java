@@ -1,4 +1,4 @@
-package de.robert_heim.unfuddle2bitbucket.model;
+package de.robert_heim.unfuddle2bitbucket.model.bitbucket;
 
 public enum Priority {
 	TRIVIAL("trivial"), MINOR("minor"), MAJOR("major"), CRITICAL("critical"), BLOCKER(

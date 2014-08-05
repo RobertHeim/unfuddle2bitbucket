@@ -1,10 +1,11 @@
-package de.robert_heim.unfuddle2bitbucket.model.unfuddle;
+package de.robert_heim.unfuddle2bitbucket.model.bitbucket;
 
-abstract public class StringObjectWithId {
+public class Person {
+
 	private Integer id;
 	private String name;
 
-	public StringObjectWithId() {
+	public Person() {
 	}
 
 	public Integer getId() {
