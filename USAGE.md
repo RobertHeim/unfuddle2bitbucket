@@ -25,6 +25,7 @@ Options:
                               |	default.version=... analogous to default.assignee
                               |		if name is provided, the version must exist in the backup
                               |
+    -fw,--force-write         overwrite the output file if it exists
     -h,--help                 print this help text
     -i,--input-file <FILE>    the backup.xml created by unfuddle
     -o,--output-file <FILE>   the file to write the JSON-output to

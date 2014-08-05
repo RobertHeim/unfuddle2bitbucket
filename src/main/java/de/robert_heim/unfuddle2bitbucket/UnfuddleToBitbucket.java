@@ -92,12 +92,20 @@ public class UnfuddleToBitbucket {
 					String inputFileName = line.getOptionValue("i");
 					String outputFileName = line.getOptionValue("o");
 
-					// check that file does not exist
-					File outputFile = new File(outputFileName);
-					if (outputFile.exists()) {
+					boolean writeToOutputFile = true;
+					if (!line.hasOption("fw")) {
+						// check that file does not exist
+						File outputFile = new File(outputFileName);
+						if (outputFile.exists()) {
+							writeToOutputFile = false;
+						}
+					}
+
+					if (!writeToOutputFile) {
 						System.err
-								.println("Output file does exist, I won't overwrite it. Please provide a path to a file that does not exist.");
+								.println("Output file does exist. Please provide a path to a file that does not exist or provide the -fw (--force-write) option.");
 					} else {
+
 						BackupToModel bm = new BackupToModel(properties);
 						DbJson dbJson = bm.convert(inputFileName);
 
@@ -177,6 +185,9 @@ public class UnfuddleToBitbucket {
 						.withDescription(
 								"print the json in readable format instead of minimizing the output")
 						.create("p"));
+		runOptions.addOption(OptionBuilder.withLongOpt("force-write")
+				.withDescription("overwrite the output file if it exists")
+				.create("fw"));
 
 		runOptions
 				.addOption(OptionBuilder
