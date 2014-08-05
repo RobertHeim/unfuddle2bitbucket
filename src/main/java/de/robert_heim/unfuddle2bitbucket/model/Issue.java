@@ -18,7 +18,7 @@ public class Issue {
 	private String title;
 	@NotNull
 	private Integer id;
-	private Component component;
+	private String component;
 	private String milestone;
 	private Version version;
 	private String content;
@@ -96,11 +96,11 @@ public class Issue {
 		this.id = id;
 	}
 
-	public Component getComponent() {
+	public String getComponent() {
 		return component;
 	}
 
-	public void setComponent(Component component) {
+	public void setComponent(String component) {
 		this.component = component;
 	}
 

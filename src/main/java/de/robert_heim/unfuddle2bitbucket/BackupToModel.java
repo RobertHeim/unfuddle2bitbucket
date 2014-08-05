@@ -302,7 +302,7 @@ public class BackupToModel {
 				Component component = findComponentByName(unfuddleComponent
 						.getName());
 				if (null != component) {
-					i.setComponent(component);
+					i.setComponent(component.getName());
 				}
 			}
 
