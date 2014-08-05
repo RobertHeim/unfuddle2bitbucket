@@ -90,7 +90,7 @@ public class UnfuddleToBitbucket {
 
 					String inputFile = line.getOptionValue("i");
 					String outputFile = line.getOptionValue("o");
-					
+
 					BackupToModel bm = new BackupToModel(properties);
 					DbJson dbJson = bm.convert(inputFile);
 
@@ -117,7 +117,7 @@ public class UnfuddleToBitbucket {
 
 		final PrintWriter writer = new PrintWriter(out);
 
-		int printedRowWidth = 80;
+		int printedRowWidth = 100;
 		String header = "Options:";
 		int spacesBeforeOption = 4;
 		int spacesBeforeOptionDescription = 3;
@@ -163,11 +163,28 @@ public class UnfuddleToBitbucket {
 								"print the json in readable format instead of minimizing the output")
 						.create("p"));
 
-		runOptions.addOption(OptionBuilder
-				.withLongOpt("config-file")
-				.withDescription(
-						"use FILE instead of standard config.properties")
-				.hasArg().withArgName("FILE").create("c"));
+		runOptions
+				.addOption(OptionBuilder
+						.withLongOpt("config-file")
+						.withDescription(
+								"use FILE instead of standard config\n"
+										+ "the FILE can contain:\n"
+										+ "|\tdefault.kind=[bug | enhancement | proposal | task]\n"
+										+ "|\t\tif the given value is not within that list, bug is used\n"
+										+ "|\tdefault.assignee=[auto_first | name | (can be null)]\n"
+										+ "|\t\tauto_first: takes the first person found\n"
+										+ "|\t\tname:\tthe given username is set as default\n"
+										+ "|\t\t\tif it does not exist in the people-tag\n"
+										+ "|\t\t\tno user is set as default assignee\n"
+										+ "|\t\tnull / not specified: no default assignee\n"
+										+ "|\tdefault.component=... analogous to default.assignee\n"
+										+ "|\t\tif name is provided, the component must exist in the backup\n"
+										+ "|\tdefault.milestone=... analogous to default.assignee\n"
+										+ "|\t\tif name is provided, the milestone must exist in the backup\n"
+										+ "|\tdefault.version=... analogous to default.assignee\n"
+										+ "|\t\tif name is provided, the version must exist in the backup\n"
+										+ "|").hasArg().withArgName("FILE")
+						.create("c"));
 
 		runOptions.addOption(OptionBuilder.withLongOpt("input-file")
 				.withDescription("the backup.xml created by unfuddle").hasArg()

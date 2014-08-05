@@ -31,19 +31,6 @@ This project is under development and there are no releases, yet! IT DOES NOT WO
 * Meta
 * ~~Attachments~~
 
-## Configuration
-
-you can provide a *config.properties* file [TODO how].
-* **default.kind** (default: bug) = \[bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
-* **default.assignee** = [auto_first | username | (can be null)]
-    * *auto_first*: takes the first person found
-    * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
-    * *null / not specified:* no default assignee
-* **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
-* **default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
-* **default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
-
-
 ## Usage
 
 ### 1) Create a backup
@@ -62,6 +49,31 @@ Options:
                               minimizing the output
     -v,--version              print the version
 
+```
+
+#### config.properties
+
+## Configuration
+
+you can provide a *config.properties* file, by specifying the *-c,--config-file* option.
+* **default.kind** (default: bug) = \[bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
+* **default.assignee** = [auto_first | username | (can be null)]
+    * *auto_first*: takes the first person found
+    * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
+    * *null / not specified:* no default assignee
+* **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
+* **default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
+* **default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
+
+#### Standard configuration
+If no *config-file* is specified, it defaults to:
+
+```
+default.kind=bug
+default.assignee=
+default.component=
+default.milestone=
+default.version=
 ```
 
 #### example usage:
