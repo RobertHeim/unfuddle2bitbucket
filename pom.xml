@@ -5,8 +5,8 @@
 	<artifactId>unfuddle2bitbucket</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<scm>
-		<connection>scm:git:ssh://github.com/RobertHeim/unfuddle2bitbucket.git</connection>
-		<developerConnection>scm:git:ssh://github.com/RobertHeim/unfuddle2bitbucket.git</developerConnection>
+		<connection>scm:git:https://github.com/RobertHeim/unfuddle2bitbucket.git</connection>
+		<developerConnection>scm:git:https://github.com/RobertHeim/unfuddle2bitbucket.git</developerConnection>
 		<url>https://github.com/RobertHeim/unfuddle2bitbucket</url>
 		<tag>HEAD</tag>
 	</scm>
