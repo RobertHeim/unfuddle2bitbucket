@@ -3,25 +3,14 @@ package de.robert_heim.unfuddle2bitbucket.model.bitbucket;
 import java.util.List;
 
 public class DbJson {
-	@NotNull
+
 	private List<Issue> issues;
-	@NotNull
 	private List<Comment> comments;
-	@NotNull
 	private List<Attachment> attachments;
-	@NotNull
 	private List<Component> components;
-
-	@NotNull
 	private List<Milestone> milestones;
-
-	@NotNull
 	private List<Version> versions;
-
-	@NotNull
 	private List<Log> logs;
-
-	@NotNull
 	private Meta meta;
 
 	public List<Issue> getIssues() {

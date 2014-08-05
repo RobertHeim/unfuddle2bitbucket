@@ -8,18 +8,12 @@ import com.google.gson.annotations.SerializedName;
 public class Issue {
 	private List<String> watchers;
 	private List<String> voters;
-	@NotNull
 	private Kind kind;
-	@NotNull
 	private Status status;
-	@NotNull
 	private Priority priority;
-	@NotNull
 	@SerializedName("created_on")
 	private Date createdOn;
-	@NotNull
 	private String title;
-	@NotNull
 	private Integer id;
 	private String component;
 	private String milestone;
@@ -27,10 +21,8 @@ public class Issue {
 	private String content;
 	private String assignee;
 	private String reporter;
-	@NotNull
 	@SerializedName("content_updated_on")
 	private Date contentUpdatedOn;
-	@NotNull
 	@SerializedName("updated_on")
 	private Date updatedOn;
 

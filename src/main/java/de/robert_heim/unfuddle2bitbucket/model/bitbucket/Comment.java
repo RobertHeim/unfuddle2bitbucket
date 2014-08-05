@@ -6,12 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Comment {
 	private String content;
-	@NotNull
 	@SerializedName("created_on")
 	private Date createdOn;
-	@NotNull
 	private Integer id;
-	@NotNull
 	private Integer issue;
 	@SerializedName("udpated_on")
 	private Date updatedOn;

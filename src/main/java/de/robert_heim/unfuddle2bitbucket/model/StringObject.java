@@ -1,9 +1,7 @@
 package de.robert_heim.unfuddle2bitbucket.model;
 
-import de.robert_heim.unfuddle2bitbucket.model.bitbucket.NotNull;
-
 abstract public class StringObject implements HasName {
-	@NotNull
+
 	private String name;
 
 	public StringObject() {

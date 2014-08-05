@@ -11,7 +11,6 @@ public class Meta {
 	@SerializedName("default_component")
 	private String defaultComponent;
 
-	@NotNull
 	@SerializedName("default_kind")
 	private String defaultKind = DEFAULT_KIND.name();
 

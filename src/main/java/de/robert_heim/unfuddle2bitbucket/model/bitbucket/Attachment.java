@@ -1,11 +1,8 @@
 package de.robert_heim.unfuddle2bitbucket.model.bitbucket;
 
 public class Attachment {
-	@NotNull
 	private String filename;
-	@NotNull
 	private Integer issue;
-	@NotNull
 	private String path;
 	private String user;
 
