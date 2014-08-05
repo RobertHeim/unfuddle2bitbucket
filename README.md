@@ -41,31 +41,31 @@ In unfuddle go to your project, hit "*Project settings*" and click on "*Request 
 ```
 usage: unfuddleToBitbucket [-c <FILE>] [-h] -i <FILE> -o <FILE> [-p] [-v]
 Options:
-    -c,--config-file <FILE>   use FILE instead of standard config.properties
+    -c,--config-file <FILE>   use FILE instead of standard config
+                              the FILE can contain:
+                              |	default.kind=[bug | enhancement | proposal | task]
+                              |		if the given value is not within that list, bug is used
+                              |	default.assignee=[auto_first | name | (can be null)]
+                              |		auto_first: takes the first person found
+                              |		name:	the given username is set as default
+                              |			if it does not exist in the people-tag
+                              |			no user is set as default assignee
+                              |		null / not specified: no default assignee
+                              |	default.component=... analogous to default.assignee
+                              |		if name is provided, the component must exist in the backup
+                              |	default.milestone=... analogous to default.assignee
+                              |		if name is provided, the milestone must exist in the backup
+                              |	default.version=... analogous to default.assignee
+                              |		if name is provided, the version must exist in the backup
+                              |
     -h,--help                 print this help text
     -i,--input-file <FILE>    the backup.xml created by unfuddle
     -o,--output-file <FILE>   the file to write the JSON-output to
-    -p,--pretty-print         print the json in readable format instead of
-                              minimizing the output
+    -p,--pretty-print         print the json in readable format instead of minimizing the output
     -v,--version              print the version
-
 ```
 
-#### config.properties
-
-## Configuration
-
-you can provide a *config.properties* file, by specifying the *-c,--config-file* option.
-* **default.kind** (default: bug) = \[bug | enhancement | proposal | task] (if the given value is not within that list, the default value is used).
-* **default.assignee** = [auto_first | username | (can be null)]
-    * *auto_first*: takes the first person found
-    * *username*: the given *username* is set as default - if it does not exist in the people-tag no user is set as default assignee   
-    * *null / not specified:* no default assignee
-* **default.component**: analogous to *default.assignee* (if given, the component must exist in components)
-* **default.milestone**: analogous to *default.assignee* (if given, the milestone must exist in milestones)
-* **default.version**: analogous to *default.assignee* (if given, the version must exist in versions)
-
-#### Standard configuration
+#### Configuration
 If no *config-file* is specified, it defaults to:
 
 ```
@@ -76,7 +76,7 @@ default.milestone=
 default.version=
 ```
 
-#### example usage:
+#### Example usage:
 ```
 java -jar unfuddleTobitbucket -p -i /path/to/backup.xml -o /path/to/output.json
 ```
