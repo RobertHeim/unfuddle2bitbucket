@@ -79,7 +79,7 @@ You can specify a config-file in JSON-format. The following explains what you ca
 
 ### Example usage:
 ```
-java -jar unfuddleTobitbucket -p -i /path/to/backup.xml -o /path/to/output.json
+java -jar unfuddleTobitbucket -p -c config.json -i /path/to/backup.xml -o /path/to/output.json
 Done. You can find the result in /path/to/output.json
 ```
 
