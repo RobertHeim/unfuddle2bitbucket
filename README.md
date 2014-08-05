@@ -9,7 +9,7 @@ Repository: https://github.com/RobertHeim/unfuddle2bitbucket
 
 2. Certain objects, such as usernames or comments, rely on foreign keys. During an import, **Bitbucket silently uses NULL to replace any foreign keys that it cannot resolve** (for example, a username that does not exist on Bitbucket).
 
-3. All, foreign keys are managed from the converter. However, a user at unfuddle named "unfuddleUser1" may exist on Bitbucket with another username, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information. If you forget to configure the config-file, **someone else on this planet might get assigned to your issues!**
+3. All, foreign keys are managed by the converter. However, a user at unfuddle named "unfuddleUser1" may exist on Bitbucket with another username, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information. If you forget to configure the config-file, **someone else on this planet might get assigned to your issues!**
 
 
 ## License
