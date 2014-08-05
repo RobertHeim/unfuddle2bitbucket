@@ -6,31 +6,41 @@ In unfuddle go to your project, hit "*Project settings*" and click on "*Request 
 ## 2) Convert the data
 
 ```
-usage: unfuddleToBitbucket [-c <FILE>] [-h] -i <FILE> -o <FILE> [-p] [-v]
+usage: unfuddleToBitbucket [-c <FILE>] [-fw] [-h] -i <FILE> -o <FILE> [-p] [-u <FILE>] [-v]
 Options:
-    -c,--config-file <FILE>   use FILE instead of standard config
-                              the FILE can contain:
-                              |	default.kind=[bug | enhancement | proposal | task]
-                              |		if the given value is not within that list, bug is used
-                              |	default.assignee=[auto_first | name | (can be null)]
-                              |		auto_first: takes the first person found
-                              |		name:	the given username is set as default
-                              |			if it does not exist in the people-tag
-                              |			no user is set as default assignee
-                              |		null / not specified: no default assignee
-                              |	default.component=... analogous to default.assignee
-                              |		if name is provided, the component must exist in the backup
-                              |	default.milestone=... analogous to default.assignee
-                              |		if name is provided, the milestone must exist in the backup
-                              |	default.version=... analogous to default.assignee
-                              |		if name is provided, the version must exist in the backup
-                              |
-    -fw,--force-write         overwrite the output file if it exists
-    -h,--help                 print this help text
-    -i,--input-file <FILE>    the backup.xml created by unfuddle
-    -o,--output-file <FILE>   the file to write the JSON-output to
-    -p,--pretty-print         print the json in readable format instead of minimizing the output
-    -v,--version              print the version
+    -c,--config-file <FILE>    use FILE instead of standard config
+                               the FILE can contain:
+                               |default.kind=[bug | enhancement | proposal | task]
+                               |	if the given value is not within that list, bug is used
+                               |default.assignee=[auto_first | name | (can be null)]
+                               |	auto_first: takes the first person found
+                               |	name:	the given username is set as default
+                               |		if it does not exist in the people-tag
+                               |		no user is set as default assignee
+                               |	null / not specified: no default assignee
+                               |default.component=... analogous to default.assignee
+                               |	if name is provided, the component must exist in the backup
+                               |default.milestone=... analogous to default.assignee
+                               |	if name is provided, the milestone must exist in the backup
+                               |default.version=... analogous to default.assignee
+                               |	if name is provided, the version must exist in the backup
+                               |
+    -fw,--force-write          overwrite the output file if it exists
+    -h,--help                  print this help text
+    -i,--input-file <FILE>     the backup.xml created by unfuddle
+    -o,--output-file <FILE>    the file to write the JSON-output to
+    -p,--pretty-print          print the json in readable format instead of minimizing the output
+    -u,--user-mapping <FILE>   a JSON file that maps the users of Unfuddle to those of Bitbucket
+                               Format example:
+                               |{
+                               |  "userMap":{
+                               |    "unfuddleUser1":"bitbucketUser1",
+                               |    "unfuddleUser2":"bitbucketUser2",
+                               |    "unfuddleUser...":"bitbucketUser...",
+                               |    "unfuddleUserN":"bitbucketUserN"
+                               |  }
+                               |}
+    -v,--version               print the version
 ```
 
 ### Configuration
