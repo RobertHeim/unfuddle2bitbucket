@@ -7,9 +7,9 @@ Repository: https://github.com/RobertHeim/unfuddle2bitbucket
 ## WARNING
 1. An import on Bitbucket removes ALL existing issues!
 
-2. Certain objects, such as usernames or comments, rely on foreign keys. During an import, Bitbucket silently uses NULL to replace any foreign keys that it cannot resolve (for example, a username that does not exist on Bitbucket).
+2. Certain objects, such as usernames or comments, rely on foreign keys. During an import, **Bitbucket silently uses NULL to replace any foreign keys that it cannot resolve** (for example, a username that does not exist on Bitbucket).
 
-3. All, foreign keys are managed from the converter. However, a user at unfuddle named "unfuddleUser1" may exist on Bitbucket with another username, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information. If you forget to configure the config-file, **someoneelse on this planet** might get assigned to the issues!
+3. All, foreign keys are managed from the converter. However, a user at unfuddle named "unfuddleUser1" may exist on Bitbucket with another username, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information. If you forget to configure the config-file, **someoneelse on this planet might get assigned to your issues!**
 
 ## What is supported?
 
@@ -33,7 +33,7 @@ Repository: https://github.com/RobertHeim/unfuddle2bitbucket
     * component
     * milestone
     * comments
-    * watcher / subscriptions
+    * watcher / subscriptions, they are converted but [Bitbucket will not import them](https://bitbucket.org/site/master/issue/7417/issue-importer-does-not-transfer-watchers), unless the zip is signed by them to prevent spam.
     * ~~voters~~ (does not exist in unfuddle?!)
 * Components
 * Meta
