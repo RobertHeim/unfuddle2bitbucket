@@ -46,21 +46,33 @@ Options:
 ```
 
 ### Configuration
-You need to specify a config-file, containing at least this:
+You can specify a config-file in JSON-format. The following explains what you can do:
+
+* meta: some default values, they are all related to bitbucket (not unfuddle)
+* userMap: If the names of the users are not the same on Bitbucket as they were on Unfuddle, this helps you to convert them.
+* severity2KindMap: While you can specify your own severities on Unfuddle, Bitbucket only knows some specific kind-types. The **valid** ones are: *bug*, *enhancement*, *proposal* and *task*. As a default, the *bug*-kind is used whenever the configuration is not specified sufficiently. It's **case-sensitive**!
+ 
+#### Example Configuration
 
 ```
-
+{
+	"meta": {
+		"defaultKind":"bug",
+		"defaultAssignee":"MyBitBucketUser1", // bitbucket account, not unfuddle
+		"defaultComponent":"",
+		"defaultMilestone":"",
+		"defaultVersion":""
+	},
+	"userMap":{
+		"MyUnfuddleUser1":"MyBitBucketUser1"
+	},
+	"severity2KindMap":{
+		"MyCustomUnfuddleSeverity":"bug"		// case sensitive!
+	}
+}
 ```
 
-If no *config-file* is specified, it defaults to:
-
-```
-default.kind=bug
-default.assignee=
-default.component=
-default.milestone=
-default.version=
-```
+#### severity and kind-types:
 
 ### Example usage:
 ```
