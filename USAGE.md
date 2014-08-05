@@ -79,9 +79,9 @@ You can specify a config-file in JSON-format. The following explains what you ca
 
 ### Example usage:
 ```
-java -jar unfuddleTobitbucket -p -c config.json -i /path/to/backup.xml -o /path/to/output.json
-Done. You can find the result in /path/to/output.json
+java -jar unfuddleTobitbucket -p -c config.json -i /path/to/backup.xml -o /path/to/output.zip
+Done. You can find the result in /path/to/output.zip
 ```
 
 ## 3) Import the converted data
-Go to a repository, click on "*Settings*" and there on "*Import & export*". WARNING: **Importing removes all existing issues from the repository. You cannot undo an import.** If you are sure that you want to overwrite all the issues, select the output.json for upload and start the import.
+Go to a repository, click on "*Settings*" and there on "*Import & export*". WARNING: **Importing removes all existing issues from the repository. You cannot undo an import.** If you are sure that you want to overwrite all the issues, select the output.zip for upload and start the import.

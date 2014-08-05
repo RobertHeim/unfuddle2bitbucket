@@ -5,12 +5,11 @@ This program converts a backup.xml (Tickets, Milestones, etc.) created from Unfu
 Repository: https://github.com/RobertHeim/unfuddle2bitbucket
 
 ## WARNING
+1. An import on Bitbucket removes ALL existing issues!
 
-This project is under development and there are no releases, yet! IT DOES NOT WORK, YET! DON'T USE IT!
+2. Certain objects, such as usernames or comments, rely on foreign keys. During an import, Bitbucket silently uses NULL to replace any foreign keys that it cannot resolve (for example, a username that does not exist on Bitbucket).
 
-Certain objects, such as usernames or comments, rely on foreign keys. During an import, Bitbucket silently uses NULL to replace any foreign keys that it cannot resolve (for example, a username that does not exist on Bitbucket).
-
-All, foreign keys are managed from the converter. However, a user named "unfuddleUser1" may exist on Bitbucket with another name, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information.
+3. All, foreign keys are managed from the converter. However, a user at unfuddle named "unfuddleUser1" may exist on Bitbucket with another username, e.g. "bitbucketUser1". To convert the username, you can provide a *userMap*. See [USAGE.md](USAGE.md) for more information. If you forget to configure the config-file, **someoneelse on this planet** might get assigned to the issues!
 
 ## What is supported?
 

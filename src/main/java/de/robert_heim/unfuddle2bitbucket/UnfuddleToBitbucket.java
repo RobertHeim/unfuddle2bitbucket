@@ -121,9 +121,10 @@ public class UnfuddleToBitbucket {
 
 			String result = gson.toJson(dbJson);
 			// print to outputFile
-			PrintWriter writer = new PrintWriter(outputFileName, "UTF-8");
-			writer.write(result);
-			writer.close();
+			Zipper.createZipArchive(outputFileName, result);
+			// PrintWriter writer = new PrintWriter(outputFileName, "UTF-8");
+			// writer.write(result);
+			// writer.close();
 			System.out.println("Done. You can find the result in "
 					+ outputFileName);
 
@@ -230,7 +231,7 @@ public class UnfuddleToBitbucket {
 
 		runOptions.addOption(OptionBuilder.withLongOpt("output-file")
 				.isRequired().withValueSeparator('=')
-				.withDescription("the file to write the JSON-output to")
+				.withDescription("the file to write the archive to")
 				.hasArg().withArgName("FILE").create("o"));
 
 		// runOptions
