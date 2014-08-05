@@ -10,7 +10,7 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
-public class DateTimeSerializer implements JsonSerializer<Date> {
+public class DateSerializer implements JsonSerializer<Date> {
 
 	private DateFormat iso8601Format = new SimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss.SSSSSSXXX");

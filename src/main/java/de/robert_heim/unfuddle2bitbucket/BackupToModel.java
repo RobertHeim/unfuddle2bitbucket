@@ -18,6 +18,7 @@ import de.robert_heim.unfuddle2bitbucket.model.Kind;
 import de.robert_heim.unfuddle2bitbucket.model.Meta;
 import de.robert_heim.unfuddle2bitbucket.model.Milestone;
 import de.robert_heim.unfuddle2bitbucket.model.Person;
+import de.robert_heim.unfuddle2bitbucket.model.Status;
 import de.robert_heim.unfuddle2bitbucket.model.Version;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.IntegerConverter;
@@ -26,6 +27,8 @@ import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Ticket;
 
 public class BackupToModel {
+
+	static private Status DEFAULT_STATUS = Status.NEW;
 
 	private ConfigJson configJson;
 
@@ -271,7 +274,48 @@ public class BackupToModel {
 			}
 
 			// status
-			// TODO i.setStatus(ticket.getStatus());
+
+			{
+				Status status = DEFAULT_STATUS;
+
+				if (null != ticket.getStatus()) {
+					switch (ticket.getStatus()) {
+					case ACCEPTED:
+					case REASSIGNED:
+					case REOPENED:
+						status = Status.OPEN;
+						break;
+					case CLOSED:
+					case RESOLVED:
+						status = Status.RESOLVED;
+						if (null != ticket.getResolution()) {
+							switch (ticket.getResolution()) {
+							case INVALID:
+								status = Status.INVALID;
+								break;
+							case DUPLICATE:
+								status = Status.DUPLICATE;
+								break;
+							case WILL_NOT_FIX:
+								status = Status.WONTFIX;
+								break;
+							default:
+								status = Status.RESOLVED;
+								break;
+							}
+						}
+						break;
+					case UNACCEPTED:
+						status = Status.INVALID;
+						break;
+					case NEW:
+					default:
+						status = Status.NEW;
+						break;
+					}
+				}
+				i.setStatus(status);
+			}
 
 			// priority
 			// TODO i.setPriority(ticket.getSeverityId());
@@ -347,8 +391,10 @@ public class BackupToModel {
 				username = p.getName();
 			}
 			Comment comment = new Comment(unfuddleComment.getBody(),
-					unfuddleComment.getCreatedAt(), getUniqueCommentId(),
-					ticket.getId(), ticket.getUpdatedAt(), username);
+					unfuddleComment.getCreatedAt().toGregorianCalendar()
+							.getTime(), getUniqueCommentId(), ticket.getId(),
+					ticket.getUpdatedAt().toGregorianCalendar().getTime(),
+					username);
 			this.comments.add(comment);
 		}
 	}

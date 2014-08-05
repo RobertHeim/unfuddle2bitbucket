@@ -1,6 +1,6 @@
 package de.robert_heim.unfuddle2bitbucket.model;
 
-import javax.xml.datatype.XMLGregorianCalendar;
+import java.util.Date;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,17 +8,17 @@ public class Comment {
 	private String content;
 	@NotNull
 	@SerializedName("created_on")
-	private XMLGregorianCalendar createdOn;
+	private Date createdOn;
 	@NotNull
 	private Integer id;
 	@NotNull
 	private Integer issue;
 	@SerializedName("udpated_on")
-	private XMLGregorianCalendar updatedOn;
+	private Date updatedOn;
 	private String user;
 
-	public Comment(String content, XMLGregorianCalendar createdOn, Integer id,
-			Integer issue, XMLGregorianCalendar updatedOn, String user) {
+	public Comment(String content, Date createdOn, Integer id, Integer issue,
+			Date updatedOn, String user) {
 		this.content = content;
 		this.createdOn = createdOn;
 		this.id = id;
@@ -35,11 +35,11 @@ public class Comment {
 		this.content = content;
 	}
 
-	public XMLGregorianCalendar getCreatedOn() {
+	public Date getCreatedOn() {
 		return createdOn;
 	}
 
-	public void setCreatedOn(XMLGregorianCalendar createdOn) {
+	public void setCreatedOn(Date createdOn) {
 		this.createdOn = createdOn;
 	}
 
@@ -59,11 +59,11 @@ public class Comment {
 		this.issue = issue;
 	}
 
-	public XMLGregorianCalendar getUpdatedOn() {
+	public Date getUpdatedOn() {
 		return updatedOn;
 	}
 
-	public void setUpdatedOn(XMLGregorianCalendar updatedOn) {
+	public void setUpdatedOn(Date updatedOn) {
 		this.updatedOn = updatedOn;
 	}
 

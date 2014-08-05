@@ -17,6 +17,7 @@ public class Ticket {
 	@XmlJavaTypeAdapter(IntegerConverter.class)
 	private Integer severityId;
 
+	private Resolution resolution;
 	private Status status;
 	private Integer priority;
 
@@ -67,6 +68,14 @@ public class Ticket {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Resolution getResolution() {
+		return resolution;
+	}
+
+	public void setResolution(Resolution resolution) {
+		this.resolution = resolution;
 	}
 
 	public Integer getPriority() {
@@ -164,16 +173,4 @@ public class Ticket {
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
-
-	@Override
-	public String toString() {
-		return "Ticket [severityId=" + severityId + ", status=" + status
-				+ ", priority=" + priority + ", createdAt=" + createdAt
-				+ ", summary=" + summary + ", id=" + id + ", componentId="
-				+ componentId + ", milestoneId=" + milestoneId + ", versionId="
-				+ versionId + ", description=" + description + ", assigneeId="
-				+ assigneeId + ", reporterId=" + reporterId + ", updatedAt="
-				+ updatedAt + ", comments=" + comments + "]";
-	}
-
 }

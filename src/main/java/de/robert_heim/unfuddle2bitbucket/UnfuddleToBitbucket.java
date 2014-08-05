@@ -48,6 +48,7 @@ import com.google.gson.JsonSyntaxException;
 
 import de.robert_heim.unfuddle2bitbucket.model.DbJson;
 import de.robert_heim.unfuddle2bitbucket.model.Kind;
+import de.robert_heim.unfuddle2bitbucket.model.Status;
 
 public class UnfuddleToBitbucket {
 
@@ -150,8 +151,9 @@ public class UnfuddleToBitbucket {
 		if (prettyPrint) {
 			gson.setPrettyPrinting();
 		}
-		gson.registerTypeAdapter(Date.class, new DateTimeSerializer());
+		gson.registerTypeAdapter(Date.class, new DateSerializer());
 		gson.registerTypeAdapter(Kind.class, new KindSerializer());
+		gson.registerTypeAdapter(Status.class, new StatusSerializer());
 
 		return gson.create();
 
@@ -213,9 +215,12 @@ public class UnfuddleToBitbucket {
 				.withDescription("overwrite the output file if it exists")
 				.create("fw"));
 
-		runOptions.addOption(OptionBuilder.withLongOpt("config-file")
-				.withDescription("The configuration file. See documentation at github for further information.").hasArg()
-				.withArgName("FILE").create("c"));
+		runOptions
+				.addOption(OptionBuilder
+						.withLongOpt("config-file")
+						.withDescription(
+								"The configuration file. See documentation at github for further information.")
+						.hasArg().withArgName("FILE").create("c"));
 
 		runOptions.addOption(OptionBuilder.withLongOpt("input-file")
 				.withDescription("the backup.xml created by unfuddle").hasArg()
