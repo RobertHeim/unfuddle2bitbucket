@@ -48,6 +48,7 @@ import com.google.gson.JsonSyntaxException;
 
 import de.robert_heim.unfuddle2bitbucket.model.DbJson;
 import de.robert_heim.unfuddle2bitbucket.model.Kind;
+import de.robert_heim.unfuddle2bitbucket.model.Priority;
 import de.robert_heim.unfuddle2bitbucket.model.Status;
 
 public class UnfuddleToBitbucket {
@@ -154,6 +155,7 @@ public class UnfuddleToBitbucket {
 		gson.registerTypeAdapter(Date.class, new DateSerializer());
 		gson.registerTypeAdapter(Kind.class, new KindSerializer());
 		gson.registerTypeAdapter(Status.class, new StatusSerializer());
+		gson.registerTypeAdapter(Priority.class, new PrioritySerializer());
 
 		return gson.create();
 

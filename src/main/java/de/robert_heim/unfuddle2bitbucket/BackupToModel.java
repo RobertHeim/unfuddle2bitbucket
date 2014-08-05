@@ -18,6 +18,7 @@ import de.robert_heim.unfuddle2bitbucket.model.Kind;
 import de.robert_heim.unfuddle2bitbucket.model.Meta;
 import de.robert_heim.unfuddle2bitbucket.model.Milestone;
 import de.robert_heim.unfuddle2bitbucket.model.Person;
+import de.robert_heim.unfuddle2bitbucket.model.Priority;
 import de.robert_heim.unfuddle2bitbucket.model.Status;
 import de.robert_heim.unfuddle2bitbucket.model.Version;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
@@ -28,7 +29,9 @@ import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Ticket;
 
 public class BackupToModel {
 
-	static private Status DEFAULT_STATUS = Status.NEW;
+	private static final Priority DEFAULT_PRIORITY = Priority.MAJOR;
+
+	static private final Status DEFAULT_STATUS = Status.NEW;
 
 	private ConfigJson configJson;
 
@@ -318,8 +321,32 @@ public class BackupToModel {
 			}
 
 			// priority
-			// TODO i.setPriority(ticket.getSeverityId());
-
+			{
+				Priority priority = DEFAULT_PRIORITY;
+				if (null != ticket.getPriority()) {
+					switch (ticket.getPriority()) {
+					case 1:
+						priority = Priority.TRIVIAL;
+						break;
+					case 2:
+						priority = Priority.MINOR;
+						break;
+					case 3:
+						priority = Priority.MAJOR;
+						break;
+					case 4:
+						priority = Priority.CRITICAL;
+						break;
+					case 5:
+						priority = Priority.BLOCKER;
+						break;
+					default:
+						priority = DEFAULT_PRIORITY;
+						break;
+					}
+				}
+				i.setPriority(priority);
+			}
 			// assignee
 			{
 				Person assignee = findPersonById(ticket.getAssigneeId());
