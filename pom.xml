@@ -4,6 +4,12 @@
 	<groupId>de.robert_heim</groupId>
 	<artifactId>unfuddle2bitbucket</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<scm>
+		<connection>scm:git:ssh://github.com/RobertHeim/unfuddle2bitbucket.git</connection>
+		<developerConnection>scm:git:ssh://github.com/RobertHeim/unfuddle2bitbucket.git</developerConnection>
+		<url>https://github.com/RobertHeim/unfuddle2bitbucket</url>
+		<tag>HEAD</tag>
+	</scm>
 	<build>
 		<plugins>
 			<plugin>
@@ -34,6 +40,11 @@
 						</manifest>
 					</archive>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.5</version>
 			</plugin>
 		</plugins>
 	</build>
