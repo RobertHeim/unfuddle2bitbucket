@@ -54,6 +54,7 @@ see [LICENCE.md](LICENCE.md) for the full licence-text.
     * reopen ticket
     * ~~update ticket~~ Unfuddle puts the changes from the update in the description - this may contain emailaddresses as plaintext or sometimes the Names (not usernames) and other stuff... which makes it quite complicated to support it. A solution might parse the description-field. It may contain the changed field enclosed in  double-stars (\*\*)
 * ~~Links to Changesets from Tickets, Comments and Logs~~
+* ~~Associated Tickets~~
 * Links to Tickets from anywhere (e.g. comments)
 
 ## Usage
