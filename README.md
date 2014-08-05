@@ -60,4 +60,6 @@ The data format that is expected by Bitbucket can be found [here](https://conflu
 
 ## License
 
-see [LICENCE.md](LICENCE.md)
+The Software is released under the MIT-Licence - so you can do what you want! If you like it consider DONATING to me via Paypal: robert@robert-heim.de . Thanks!
+
+see [LICENCE.md](LICENCE.md) for the full licence-text.
