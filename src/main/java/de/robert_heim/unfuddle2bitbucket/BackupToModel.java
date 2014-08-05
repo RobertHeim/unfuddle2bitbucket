@@ -72,6 +72,7 @@ public class BackupToModel {
 		this.unfuddleComponents = new ArrayList<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component>();
 		this.unfuddleMilestones = new ArrayList<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone>();
 		this.unfuddleVersions = new ArrayList<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version>();
+		this.unfuddleSeverities = new ArrayList<Severity>();
 		this.issues = new ArrayList<Issue>();
 		this.meta = new Meta();
 		this.milestones = new ArrayList<Milestone>();
@@ -106,7 +107,6 @@ public class BackupToModel {
 	private void convertSeverities(Project project) {
 		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity unfuddleSeverity : project
 				.getSeverities()) {
-			Component component = new Component(unfuddleSeverity.getName());
 			unfuddleSeverities.add(unfuddleSeverity);
 		}
 	}
@@ -214,7 +214,7 @@ public class BackupToModel {
 				.getPeople()) {
 			Person person = new Person();
 			person.setId(unfuddlePerosn.getId());
-			String newUsername = configJson.getUserMap().lookup(
+			String newUsername = configJson.lookupUsername(
 					unfuddlePerosn.getUsername(), unfuddlePerosn.getUsername());
 			person.setName(newUsername);
 			this.people.add(person);
@@ -255,12 +255,11 @@ public class BackupToModel {
 										+ "' could not be found in the input file. Using default kind ('"
 										+ kind + "').");
 					} else {
-						kind = configJson.getSeverity2KindMap().lookup(
-								s.getName(), null);
+						kind = configJson.lookupKind(s.getName(), null);
 						if (null == kind) {
 							kind = Meta.DEFAULT_KIND;
 							System.out
-									.println("Warning: there is no mapping to a kind specified for the severity '"
+									.println("Warning: there is no mapping specified for the severity '"
 											+ s.getName()
 											+ "'. Using default ('"
 											+ kind
@@ -404,8 +403,11 @@ public class BackupToModel {
 	}
 
 	private Severity findSeverityById(Integer severityId) {
-
-		// TODO Auto-generated method stub
+		for (Severity s : unfuddleSeverities) {
+			if (s.getId().equals(severityId)) {
+				return s;
+			}
+		}
 		return null;
 	}
 
