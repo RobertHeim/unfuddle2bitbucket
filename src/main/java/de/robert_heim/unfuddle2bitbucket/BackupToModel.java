@@ -250,7 +250,7 @@ public class BackupToModel {
 				Milestone milestone = findMilestoneByName(unfuddleMilestone
 						.getName());
 				if (null != milestone) {
-					i.setMilestone(milestone);
+					i.setMilestone(milestone.getName());
 				}
 			}
 

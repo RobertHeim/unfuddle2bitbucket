@@ -19,7 +19,7 @@ public class Issue {
 	@NotNull
 	private Integer id;
 	private Component component;
-	private Milestone milestone;
+	private String milestone;
 	private Version version;
 	private String content;
 	private Person assignee;
@@ -104,11 +104,11 @@ public class Issue {
 		this.component = component;
 	}
 
-	public Milestone getMilestone() {
+	public String getMilestone() {
 		return milestone;
 	}
 
-	public void setMilestone(Milestone milestone) {
+	public void setMilestone(String milestone) {
 		this.milestone = milestone;
 	}
 
