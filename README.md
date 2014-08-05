@@ -37,8 +37,8 @@ All, foreign keys are managed from the converter. However, a user named "unfuddl
 * Components
 * Meta
 * ~~Attachments~~
-* ~~Events on Ticket / Logs ~~
-* ~~Links to Changesets from Tickets and Comments / Logs ~~
+* ~~Events on Ticket and Logs~~
+* ~~Links to Changesets from Tickets and Comments and Logs~~
 
 ## Usage
 
