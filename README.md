@@ -50,8 +50,23 @@ you can provide a *config.properties* file [TODO how].
 In unfuddle go to your project, hit "*Project settings*" and click on "*Request a backup of this project now*". Download and extract the backup. It contains a "*backup.xml*" which contains the tickets, milestones and so on. This is the input for the converter.
 
 ### 2) Convert the data
+
 ```
-java -jar unfuddle2bitbucket /path/to/backup.xml /path/to/output.json
+usage: unfuddleToBitbucket [-c <FILE>] [-h] -i <FILE> -o <FILE> [-p] [-v]
+Options:
+    -c,--config-file <FILE>   use FILE instead of standard config.properties
+    -h,--help                 print this help text
+    -i,--input-file <FILE>    the backup.xml created by unfuddle
+    -o,--output-file <FILE>   the file to write the JSON-output to
+    -p,--pretty-print         print the json in readable format instead of
+                              minimizing the output
+    -v,--version              print the version
+
+```
+
+#### example usage:
+```
+java -jar unfuddle2bitbucket -p -i /path/to/backup.xml -o /path/to/output.json
 ```
 
 ### 3) Import the converted data
