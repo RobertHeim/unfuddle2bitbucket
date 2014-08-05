@@ -333,12 +333,22 @@ public class BackupToModel {
 	}
 
 	private void convertComments(Ticket ticket) {
-		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Comment unufuddleComment : ticket
+		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Comment unfuddleComment : ticket
 				.getComments()) {
-			Comment comment = new Comment(unufuddleComment.getBody(),
-					unufuddleComment.getCreatedAt(), getUniqueCommentId(),
-					ticket.getId(), ticket.getUpdatedAt(), findPersonById(
-							unufuddleComment.getAuthorId()).getName());
+
+			String username = null;
+			Person p = findPersonById(unfuddleComment.getAuthorId());
+			if (null == p) {
+				System.out
+						.println("Warning: the comment-author with id '"
+								+ unfuddleComment.getAuthorId()
+								+ "' could not be found in the input file. Using 'null'.");
+			} else {
+				username = p.getName();
+			}
+			Comment comment = new Comment(unfuddleComment.getBody(),
+					unfuddleComment.getCreatedAt(), getUniqueCommentId(),
+					ticket.getId(), ticket.getUpdatedAt(), username);
 			this.comments.add(comment);
 		}
 	}
