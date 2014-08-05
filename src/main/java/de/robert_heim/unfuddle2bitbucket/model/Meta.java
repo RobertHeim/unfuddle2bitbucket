@@ -1,16 +1,13 @@
 package de.robert_heim.unfuddle2bitbucket.model;
 
 public class Meta {
+	public static final Kind DEFAULT_KIND = Kind.BUG;
 	private String defaultAssignee;
 	private String defaultComponent;
 	@NotNull
-	private String defaultKind;
+	private String defaultKind = DEFAULT_KIND.name();
 	private String defaultMilestone;
 	private String defaultVersion;
-
-	public Meta() {
-		this.defaultKind = Kind.BUG.name();
-	}
 
 	public String getDefaultAssignee() {
 		return defaultAssignee;

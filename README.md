@@ -24,7 +24,8 @@ All, foreign keys are managed from the converter. However, a user named "unfuddl
     * status
     * reporter
     * assignee
-    * priority / severity
+    * priority
+    * severity / kind
     * title / summary
     * createdOn / createdAt
     * updatedOn / updatedAt
@@ -36,6 +37,8 @@ All, foreign keys are managed from the converter. However, a user named "unfuddl
 * Components
 * Meta
 * ~~Attachments~~
+* ~~Events on Ticket / Logs ~~
+* ~~Links to Changesets from Tickets and Comments / Logs ~~
 
 ## Usage
 

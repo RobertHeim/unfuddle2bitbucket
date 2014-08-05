@@ -12,6 +12,12 @@ public enum Kind {
 		return name;
 	}
 
+	/**
+	 * find the key or return null
+	 * 
+	 * @param lowerCase
+	 * @return
+	 */
 	public static Kind find(String lowerCase) {
 		for (Kind k : Kind.values()) {
 			if (k.name.equalsIgnoreCase(lowerCase)) {

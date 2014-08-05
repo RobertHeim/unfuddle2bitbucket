@@ -5,14 +5,9 @@ import java.util.Map;
 
 public class UsernameMap {
 
-	private Map<String, String> userMap;
-
-	public UsernameMap(Map<String, String> map) {
-		this.userMap = map;
-	}
+	private Map<String, String> userMap = new HashMap<String, String>();
 
 	public UsernameMap() {
-		this(new HashMap<String, String>());
 	}
 
 	/**

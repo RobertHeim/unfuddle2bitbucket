@@ -28,6 +28,10 @@ public class Project {
 	@XmlElement(name = "version")
 	private List<Version> versions;
 
+	@XmlElementWrapper(name = "severities")
+	@XmlElement(name = "severity")
+	private List<Severity> severities;
+
 	public List<Ticket> getTickets() {
 		return tickets;
 	}
@@ -58,6 +62,14 @@ public class Project {
 
 	public void setVersions(List<Version> versions) {
 		this.versions = versions;
+	}
+
+	public List<Severity> getSeverities() {
+		return severities;
+	}
+
+	public void setSeverities(List<Severity> severities) {
+		this.severities = severities;
 	}
 
 }

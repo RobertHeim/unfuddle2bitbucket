@@ -25,11 +25,13 @@ package de.robert_heim.unfuddle2bitbucket;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.Properties;
+import java.util.List;
+
+import javax.xml.bind.JAXBException;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -43,6 +45,7 @@ import org.apache.commons.io.IOUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
 import de.robert_heim.unfuddle2bitbucket.model.DbJson;
 
@@ -51,7 +54,7 @@ public class UnfuddleToBitbucket {
 	private static final String APPLICATION_NAME = "unfuddleToBitbucket";
 	private static final String VERSION = "0.1b";
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 
 		// create the command line parser
 		CommandLineParser parser = new GnuParser();
@@ -59,88 +62,88 @@ public class UnfuddleToBitbucket {
 		Options helpOptions = createOptionsHelpVersion();
 		Options runtimeOptions = createRuntimeOptions(helpOptions);
 
-		CommandLine line = parser.parse(helpOptions, args, true);
-		if (line.getOptions().length > 0) {
-			if (line.hasOption("h")) {
-				printUsageAndHelp(APPLICATION_NAME, runtimeOptions, System.out);
-			}
-			if (line.hasOption("v")) {
-				System.out.println("version: " + VERSION);
-			}
-		} else {
-			// create the Options
-			Properties properties = new Properties();
-			// parse the command line arguments
-			try {
-				line = parser.parse(runtimeOptions, args);
-
+		try {
+			// parse the command line arguments for help or version
+			CommandLine line = parser.parse(helpOptions, args, true);
+			if (line.getOptions().length > 0) {
 				if (line.hasOption("h")) {
 					printUsageAndHelp(APPLICATION_NAME, runtimeOptions,
 							System.out);
-				} else {
-					if (line.hasOption("c")) {
-						String configFile = line.getOptionValue("c");
-						InputStream in = new FileInputStream(configFile);
-						properties.load(in);
-						in.close();
-					}
-
-					String inputFileName = line.getOptionValue("i");
-					String outputFileName = line.getOptionValue("o");
-
-					boolean writeToOutputFile = true;
-					if (!line.hasOption("fw") && fileExists(outputFileName)) {
-						writeToOutputFile = false;
-					}
-
-					if (!writeToOutputFile) {
-						System.err
-								.println("Output file does exist. Please provide a path to a file that does not exist or provide the -fw (--force-write) option.");
-					} else {
-
-						Gson gson = createAndConfigureGson(line.hasOption("p"));
-						UsernameMap usernameMap = null;
-						if (!line.hasOption("u")) {
-							usernameMap = new UsernameMap();
-						} else {
-							String usernameMapFileName = line
-									.getOptionValue("u");
-							if (!fileExists(usernameMapFileName)) {
-								System.err
-										.println("The specified user-map-file ('"
-												+ usernameMapFileName
-												+ "') does not exist! Quitting.");
-								System.exit(1);
-							} else {
-								FileInputStream userMapInputStream = new FileInputStream(
-										new File(usernameMapFileName));
-
-								String userMapString = IOUtils.toString(
-										userMapInputStream, "UTF-8");
-
-								usernameMap = gson.fromJson(userMapString,
-										UsernameMap.class);
-							}
-						}
-						BackupToModel bm = new BackupToModel(properties,
-								usernameMap);
-						DbJson dbJson = bm.convert(inputFileName);
-
-						String result = gson.toJson(dbJson);
-						// print to outputFile
-						PrintWriter writer = new PrintWriter(outputFileName,
-								"UTF-8");
-						writer.write(result);
-						writer.close();
-						System.out.println("Done. You can find the result in "
-								+ outputFileName);
-					}
-
+					System.exit(0);
 				}
-			} catch (ParseException exp) {
-				System.out.println("Error: " + exp.getMessage());
-				printUsageAndHelp(APPLICATION_NAME, runtimeOptions, System.out);
+				if (line.hasOption("v")) {
+					System.out.println("version: " + VERSION);
+					System.exit(0);
+				}
 			}
+
+			// parse the command line arguments for runtime
+			line = parser.parse(runtimeOptions, args);
+
+			String inputFileName = line.getOptionValue("i");
+			String outputFileName = line.getOptionValue("o");
+			String configFilename = line.getOptionValue("c");
+
+			fileExistsOrSystemExit(inputFileName);
+			fileExistsOrSystemExit(configFilename);
+
+			if (!line.hasOption("fw") && fileExists(outputFileName)) {
+				System.err
+						.println("Output file does exist. Please provide a path to a file that does not exist or provide the -fw (--force-write) option.");
+				System.exit(1);
+			}
+
+			Gson gson = createAndConfigureGson(line.hasOption("p"));
+
+			ConfigJson configJson = null;
+			FileInputStream configInputStream = new FileInputStream(new File(
+					configFilename));
+			String configString = IOUtils.toString(configInputStream, "UTF-8");
+			try {
+				configJson = gson.fromJson(configString, ConfigJson.class);
+			} catch (JsonSyntaxException e) {
+				System.err.println("Cannot parse config-file.");
+				e.printStackTrace(System.err);
+				System.exit(1);
+			}
+			if (!configJson.isValid()) {
+				List<String> errors = configJson.getErrors();
+				System.err.println("Invalid config-file '" + configFilename
+						+ "'");
+				for (String e : errors) {
+					System.err.println("Error: " + e);
+				}
+				System.exit(1);
+			}
+
+			BackupToModel bm = new BackupToModel(configJson);
+			DbJson dbJson = bm.convert(inputFileName);
+
+			String result = gson.toJson(dbJson);
+			// print to outputFile
+			PrintWriter writer = new PrintWriter(outputFileName, "UTF-8");
+			writer.write(result);
+			writer.close();
+			System.out.println("Done. You can find the result in "
+					+ outputFileName);
+
+		} catch (ParseException exp) {
+			System.out.println("Error: " + exp.getMessage());
+			printUsageAndHelp(APPLICATION_NAME, runtimeOptions, System.out);
+		} catch (JAXBException e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			System.exit(1);
+		}
+	}
+
+	private static void fileExistsOrSystemExit(String filename) {
+		if (!fileExists(filename)) {
+			System.err.println("The file '" + filename
+					+ "' does not exist. Exit.");
+			System.exit(1);
 		}
 	}
 
@@ -210,28 +213,9 @@ public class UnfuddleToBitbucket {
 				.withDescription("overwrite the output file if it exists")
 				.create("fw"));
 
-		runOptions
-				.addOption(OptionBuilder
-						.withLongOpt("config-file")
-						.withDescription(
-								"use FILE instead of standard config\n"
-										+ "the FILE can contain:\n"
-										+ "|default.kind=[bug | enhancement | proposal | task]\n"
-										+ "|\tif the given value is not within that list, bug is used\n"
-										+ "|default.assignee=[auto_first | name | (can be null)]\n"
-										+ "|\tauto_first: takes the first person found\n"
-										+ "|\tname:\tthe given username is set as default\n"
-										+ "|\t\tif it does not exist in the people-tag\n"
-										+ "|\t\tno user is set as default assignee\n"
-										+ "|\tnull / not specified: no default assignee\n"
-										+ "|default.component=... analogous to default.assignee\n"
-										+ "|\tif name is provided, the component must exist in the backup\n"
-										+ "|default.milestone=... analogous to default.assignee\n"
-										+ "|\tif name is provided, the milestone must exist in the backup\n"
-										+ "|default.version=... analogous to default.assignee\n"
-										+ "|\tif name is provided, the version must exist in the backup\n"
-										+ "|").hasArg().withArgName("FILE")
-						.create("c"));
+		runOptions.addOption(OptionBuilder.withLongOpt("config-file")
+				.withDescription("The configuration file").hasArg()
+				.withArgName("FILE").isRequired().create("c"));
 
 		runOptions.addOption(OptionBuilder.withLongOpt("input-file")
 				.withDescription("the backup.xml created by unfuddle").hasArg()
@@ -242,21 +226,22 @@ public class UnfuddleToBitbucket {
 				.withDescription("the file to write the JSON-output to")
 				.hasArg().withArgName("FILE").create("o"));
 
-		runOptions
-				.addOption(OptionBuilder
-						.withLongOpt("user-mapping")
-						.withDescription(
-								"a JSON file that maps the users of Unfuddle to those of Bitbucket\n"
-										+ "If no user-mapping is specified, or a user cannot be found within the map, the bitbucket-username is used without transformation.\n"
-										+ "Format example:\n"
-										+ "|{\n"
-										+ "|  \"userMap\":{\n"
-										+ "|    \"unfuddleUser1\":\"bitbucketUser1\",\n"
-										+ "|    \"anotherUFUser2\":\"someBBUser2\",\n"
-										+ "|    \"unfuddleUser...\":\"bitbucketUser...\",\n"
-										+ "|    \"unfuddleUserN\":\"bitbucketUserN\"\n"
-										+ "|  }\n" + "|}").hasArg()
-						.withArgName("FILE").create("u"));
+		// runOptions
+		// .addOption(OptionBuilder
+		// .withLongOpt("user-mapping")
+		// .withDescription(
+		// "a JSON file that maps the users of Unfuddle to those of Bitbucket\n"
+		// +
+		// "If no user-mapping is specified, or a user cannot be found within the map, the bitbucket-username is used without transformation.\n"
+		// + "Format example:\n"
+		// + "|{\n"
+		// + "|  \"userMap\":{\n"
+		// + "|    \"unfuddleUser1\":\"bitbucketUser1\",\n"
+		// + "|    \"anotherUFUser2\":\"someBBUser2\",\n"
+		// + "|    \"unfuddleUser...\":\"bitbucketUser...\",\n"
+		// + "|    \"unfuddleUserN\":\"bitbucketUserN\"\n"
+		// + "|  }\n" + "|}").hasArg()
+		// .withArgName("FILE").create("u"));
 
 		return runOptions;
 	}

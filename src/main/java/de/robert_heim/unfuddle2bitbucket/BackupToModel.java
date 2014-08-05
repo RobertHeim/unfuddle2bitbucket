@@ -4,7 +4,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -22,13 +21,12 @@ import de.robert_heim.unfuddle2bitbucket.model.Person;
 import de.robert_heim.unfuddle2bitbucket.model.Version;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Project;
+import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Ticket;
 
 public class BackupToModel {
 
-	private Properties properties;
-
-	private UsernameMap usernameMap;
+	private ConfigJson configJson;
 
 	private int nextUniqueCommentsId;
 
@@ -49,9 +47,10 @@ public class BackupToModel {
 	private List<Version> versions;
 	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Version> unfuddleVersions;
 
-	public BackupToModel(Properties properties, UsernameMap usernameMap) {
-		this.properties = properties;
-		this.usernameMap = usernameMap;
+	private List<de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity> unfuddleSeverities;
+
+	public BackupToModel(ConfigJson configJson) {
+		this.configJson = configJson;
 		this.nextUniqueCommentsId = 1;
 	}
 
@@ -82,6 +81,7 @@ public class BackupToModel {
 		convertComponents(project);
 		convertMilestones(project);
 		convertVersions(project);
+		convertSeverities(project);
 		convertProject(project);
 
 		DbJson dbJson = new DbJson();
@@ -101,6 +101,14 @@ public class BackupToModel {
 		// TODO
 	}
 
+	private void convertSeverities(Project project) {
+		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity unfuddleSeverity : project
+				.getSeverities()) {
+			Component component = new Component(unfuddleSeverity.getName());
+			unfuddleSeverities.add(unfuddleSeverity);
+		}
+	}
+
 	private void convertComponents(Project project) {
 		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Component unfuddleComponent : project
 				.getComponents()) {
@@ -111,17 +119,17 @@ public class BackupToModel {
 	}
 
 	private void convertMeta() {
-		String defaultKindName = properties.getProperty("default.kind", null);
+		this.meta = configJson.getMeta();
+		String defaultKindName = meta.getDefaultKind();
 		if (defaultKindName != null) {
 			Kind defaultKind = Kind.find(defaultKindName.toLowerCase());
 			if (null == defaultKind) {
-				defaultKind = Kind.BUG;
+				defaultKind = Meta.DEFAULT_KIND;
 			}
 			meta.setDefaultKind(defaultKind.getName());
 		}
 
-		String defaultAssignee = properties.getProperty("default.assignee",
-				null);
+		String defaultAssignee = meta.getDefaultAssignee();
 		if (defaultAssignee != null) {
 			if ("auto_first".equals(defaultAssignee)) {
 				if (people.size() > 0) {
@@ -135,8 +143,7 @@ public class BackupToModel {
 			meta.setDefaultAssignee(defaultAssignee);
 		}
 
-		String defaultComponent = properties.getProperty("default.component",
-				null);
+		String defaultComponent = meta.getDefaultComponent();
 		if (defaultComponent != null) {
 			if ("auto_first".equals(defaultComponent)) {
 				if (components.size() > 0) {
@@ -150,8 +157,7 @@ public class BackupToModel {
 			meta.setDefaultComponent(defaultComponent);
 		}
 
-		String defaultMilestone = properties.getProperty("default.milestone",
-				null);
+		String defaultMilestone = meta.getDefaultMilestone();
 		if (defaultMilestone != null) {
 			if ("auto_first".equals(defaultMilestone)) {
 				if (milestones.size() > 0) {
@@ -165,7 +171,7 @@ public class BackupToModel {
 			meta.setDefaultMilestone(defaultMilestone);
 		}
 
-		String defaultVersion = properties.getProperty("default.version", null);
+		String defaultVersion = meta.getDefaultVersion();
 		if (defaultVersion != null) {
 			if ("auto_first".equals(defaultVersion)) {
 				if (versions.size() > 0) {
@@ -206,7 +212,8 @@ public class BackupToModel {
 				.getPeople()) {
 			Person person = new Person();
 			person.setId(unfuddlePerosn.getId());
-			String newUsername = usernameMap.lookup(unfuddlePerosn.getUsername(), unfuddlePerosn.getUsername());
+			String newUsername = configJson.getUserMap().lookup(
+					unfuddlePerosn.getUsername(), unfuddlePerosn.getUsername());
 			person.setName(newUsername);
 			this.people.add(person);
 		}
@@ -229,15 +236,52 @@ public class BackupToModel {
 					.getTime());
 			i.setContent(ticket.getDescription());
 			i.setTitle(ticket.getSummary());
+
+			// kind
+			{
+				Kind kind = Kind.find(meta.getDefaultKind());
+				if (null == kind) {
+					kind = Meta.DEFAULT_KIND;
+				}
+
+				Severity s = findSeverityById(ticket.getSeverityId());
+				if (null == s) {
+					System.out
+							.println("Warning: the severity with id '"
+									+ ticket.getSeverityId()
+									+ "' could not be found in the input file. Using default kind ('"
+									+ kind + "').");
+				} else {
+					kind = configJson.getSeverity2KindMap().lookup(s.getName(),
+							null);
+					if (null == kind) {
+						kind = Meta.DEFAULT_KIND;
+						System.out
+								.println("Warning: there is no mapping to a kind specified for the severity '"
+										+ s.getName()
+										+ "'. Using default ('"
+										+ kind
+										+ "'). Please specify the mapping in the config-file to prevent this warning.");
+					}
+				}
+				i.setKind(kind);
+			}
+
+			// status
 			// TODO i.setStatus(ticket.getStatus());
+
+			// priority
 			// TODO i.setPriority(ticket.getSeverityId());
 
+			// assignee
 			{
 				Person assignee = findPersonById(ticket.getAssigneeId());
 				if (null != assignee) {
 					i.setAssignee(assignee.getName());
 				}
 			}
+
+			// reporter
 			{
 				Person reporter = findPersonById(ticket.getReporterId());
 				if (null != reporter) {
@@ -352,6 +396,12 @@ public class BackupToModel {
 				return version;
 			}
 		}
+		return null;
+	}
+
+	private Severity findSeverityById(Integer severityId) {
+
+		// TODO Auto-generated method stub
 		return null;
 	}
 
