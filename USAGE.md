@@ -31,11 +31,13 @@ Options:
     -o,--output-file <FILE>    the file to write the JSON-output to
     -p,--pretty-print          print the json in readable format instead of minimizing the output
     -u,--user-mapping <FILE>   a JSON file that maps the users of Unfuddle to those of Bitbucket
+                               If no user-mapping is specified, or a user cannot be found within the
+                               map, the bitbucket-username is used without transformation.
                                Format example:
                                |{
                                |  "userMap":{
                                |    "unfuddleUser1":"bitbucketUser1",
-                               |    "unfuddleUser2":"bitbucketUser2",
+                               |    "anotherUFUser2":"someBBUser2",
                                |    "unfuddleUser...":"bitbucketUser...",
                                |    "unfuddleUserN":"bitbucketUserN"
                                |  }

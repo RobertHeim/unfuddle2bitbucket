@@ -247,11 +247,12 @@ public class UnfuddleToBitbucket {
 						.withLongOpt("user-mapping")
 						.withDescription(
 								"a JSON file that maps the users of Unfuddle to those of Bitbucket\n"
+										+ "If no user-mapping is specified, or a user cannot be found within the map, the bitbucket-username is used without transformation.\n"
 										+ "Format example:\n"
 										+ "|{\n"
 										+ "|  \"userMap\":{\n"
 										+ "|    \"unfuddleUser1\":\"bitbucketUser1\",\n"
-										+ "|    \"unfuddleUser2\":\"bitbucketUser2\",\n"
+										+ "|    \"anotherUFUser2\":\"someBBUser2\",\n"
 										+ "|    \"unfuddleUser...\":\"bitbucketUser...\",\n"
 										+ "|    \"unfuddleUserN\":\"bitbucketUserN\"\n"
 										+ "|  }\n" + "|}").hasArg()
