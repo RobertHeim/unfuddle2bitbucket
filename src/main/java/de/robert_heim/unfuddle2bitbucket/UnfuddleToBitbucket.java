@@ -214,7 +214,7 @@ public class UnfuddleToBitbucket {
 				.create("fw"));
 
 		runOptions.addOption(OptionBuilder.withLongOpt("config-file")
-				.withDescription("The configuration file").hasArg()
+				.withDescription("The configuration file. See documentation at github for further information.").hasArg()
 				.withArgName("FILE").create("c"));
 
 		runOptions.addOption(OptionBuilder.withLongOpt("input-file")
