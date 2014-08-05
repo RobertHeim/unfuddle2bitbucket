@@ -5,11 +5,11 @@ import java.util.Map;
 
 import de.robert_heim.unfuddle2bitbucket.model.Kind;
 
-public class Severity2KindConverter {
+public class Severity2KindMap {
 
 	private Map<String, String> severity2KindMap = new HashMap<String, String>();
 
-	public Severity2KindConverter() {
+	public Severity2KindMap() {
 	}
 
 	/**

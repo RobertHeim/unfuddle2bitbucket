@@ -12,6 +12,11 @@ public enum Kind {
 		return name;
 	}
 
+	@Override
+	public String toString() {
+		return getName();
+	}
+
 	/**
 	 * find the key or return null
 	 * 

@@ -46,6 +46,12 @@ Options:
 ```
 
 ### Configuration
+You need to specify a config-file, containing at least this:
+
+```
+
+```
+
 If no *config-file* is specified, it defaults to:
 
 ```

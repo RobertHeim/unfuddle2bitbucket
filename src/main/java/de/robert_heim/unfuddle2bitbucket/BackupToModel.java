@@ -20,6 +20,7 @@ import de.robert_heim.unfuddle2bitbucket.model.Milestone;
 import de.robert_heim.unfuddle2bitbucket.model.Person;
 import de.robert_heim.unfuddle2bitbucket.model.Version;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
+import de.robert_heim.unfuddle2bitbucket.model.unfuddle.IntegerConverter;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Project;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Ticket;
@@ -57,6 +58,7 @@ public class BackupToModel {
 	public DbJson convert(String file) throws JAXBException, IOException {
 		JAXBContext context = JAXBContext.newInstance(Account.class);
 		Unmarshaller um = context.createUnmarshaller();
+		um.setAdapter(new IntegerConverter());
 		Account account = (Account) um.unmarshal(new FileReader(file));
 
 		if (account.getProjects().size() <= 0) {
@@ -244,24 +246,26 @@ public class BackupToModel {
 					kind = Meta.DEFAULT_KIND;
 				}
 
-				Severity s = findSeverityById(ticket.getSeverityId());
-				if (null == s) {
-					System.out
-							.println("Warning: the severity with id '"
-									+ ticket.getSeverityId()
-									+ "' could not be found in the input file. Using default kind ('"
-									+ kind + "').");
-				} else {
-					kind = configJson.getSeverity2KindMap().lookup(s.getName(),
-							null);
-					if (null == kind) {
-						kind = Meta.DEFAULT_KIND;
+				if (null != ticket.getSeverityId()) {
+					Severity s = findSeverityById(ticket.getSeverityId());
+					if (null == s) {
 						System.out
-								.println("Warning: there is no mapping to a kind specified for the severity '"
-										+ s.getName()
-										+ "'. Using default ('"
-										+ kind
-										+ "'). Please specify the mapping in the config-file to prevent this warning.");
+								.println("Warning: the severity with id '"
+										+ ticket.getSeverityId()
+										+ "' could not be found in the input file. Using default kind ('"
+										+ kind + "').");
+					} else {
+						kind = configJson.getSeverity2KindMap().lookup(
+								s.getName(), null);
+						if (null == kind) {
+							kind = Meta.DEFAULT_KIND;
+							System.out
+									.println("Warning: there is no mapping to a kind specified for the severity '"
+											+ s.getName()
+											+ "'. Using default ('"
+											+ kind
+											+ "'). Please specify the mapping in the config-file to prevent this warning.");
+						}
 					}
 				}
 				i.setKind(kind);

@@ -7,12 +7,14 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.datatype.XMLGregorianCalendar;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class Ticket {
 	@XmlElement(name = "severity-id")
+	@XmlJavaTypeAdapter(IntegerConverter.class)
 	private Integer severityId;
 
 	private Status status;

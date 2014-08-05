@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Date;
-import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
@@ -48,6 +47,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 
 import de.robert_heim.unfuddle2bitbucket.model.DbJson;
+import de.robert_heim.unfuddle2bitbucket.model.Kind;
 
 public class UnfuddleToBitbucket {
 
@@ -81,12 +81,9 @@ public class UnfuddleToBitbucket {
 			line = parser.parse(runtimeOptions, args);
 
 			String inputFileName = line.getOptionValue("i");
-			String outputFileName = line.getOptionValue("o");
-			String configFilename = line.getOptionValue("c");
-
 			fileExistsOrSystemExit(inputFileName);
-			fileExistsOrSystemExit(configFilename);
 
+			String outputFileName = line.getOptionValue("o");
 			if (!line.hasOption("fw") && fileExists(outputFileName)) {
 				System.err
 						.println("Output file does exist. Please provide a path to a file that does not exist or provide the -fw (--force-write) option.");
@@ -96,24 +93,25 @@ public class UnfuddleToBitbucket {
 			Gson gson = createAndConfigureGson(line.hasOption("p"));
 
 			ConfigJson configJson = null;
-			FileInputStream configInputStream = new FileInputStream(new File(
-					configFilename));
-			String configString = IOUtils.toString(configInputStream, "UTF-8");
-			try {
-				configJson = gson.fromJson(configString, ConfigJson.class);
-			} catch (JsonSyntaxException e) {
-				System.err.println("Cannot parse config-file.");
-				e.printStackTrace(System.err);
-				System.exit(1);
-			}
-			if (!configJson.isValid()) {
-				List<String> errors = configJson.getErrors();
-				System.err.println("Invalid config-file '" + configFilename
-						+ "'");
-				for (String e : errors) {
-					System.err.println("Error: " + e);
+			if (!line.hasOption("c")) {
+				// empty config
+				configJson = new ConfigJson();
+			} else {
+				// read configfile
+				String configFilename = line.getOptionValue("c");
+				fileExistsOrSystemExit(configFilename);
+
+				FileInputStream configInputStream = new FileInputStream(
+						new File(configFilename));
+				String configString = IOUtils.toString(configInputStream,
+						"UTF-8");
+				try {
+					configJson = gson.fromJson(configString, ConfigJson.class);
+				} catch (JsonSyntaxException e) {
+					System.err.println("Cannot parse config-file.");
+					e.printStackTrace(System.err);
+					System.exit(1);
 				}
-				System.exit(1);
 			}
 
 			BackupToModel bm = new BackupToModel(configJson);
@@ -153,6 +151,8 @@ public class UnfuddleToBitbucket {
 			gson.setPrettyPrinting();
 		}
 		gson.registerTypeAdapter(Date.class, new DateTimeSerializer());
+		gson.registerTypeAdapter(Kind.class, new KindSerializer());
+
 		return gson.create();
 
 	}
@@ -215,7 +215,7 @@ public class UnfuddleToBitbucket {
 
 		runOptions.addOption(OptionBuilder.withLongOpt("config-file")
 				.withDescription("The configuration file").hasArg()
-				.withArgName("FILE").isRequired().create("c"));
+				.withArgName("FILE").create("c"));
 
 		runOptions.addOption(OptionBuilder.withLongOpt("input-file")
 				.withDescription("the backup.xml created by unfuddle").hasArg()
