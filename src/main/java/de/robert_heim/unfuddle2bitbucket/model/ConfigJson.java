@@ -1,4 +1,4 @@
-package de.robert_heim.unfuddle2bitbucket;
+package de.robert_heim.unfuddle2bitbucket.model;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -7,10 +7,6 @@ public class MilestonesConverter
 		extends
 		Converter<Milestone, de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone> {
 
-	public MilestonesConverter() {
-		super();
-	}
-
 	public void convert(Project project) {
 		for (de.robert_heim.unfuddle2bitbucket.model.unfuddle.Milestone unfuddleMilestone : project
 				.getMilestones()) {

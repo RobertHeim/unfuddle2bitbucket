@@ -3,17 +3,17 @@ package de.robert_heim.unfuddle2bitbucket.converters;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.robert_heim.unfuddle2bitbucket.ConfigJson;
+import de.robert_heim.unfuddle2bitbucket.Provider;
 import de.robert_heim.unfuddle2bitbucket.model.bitbucket.Person;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
 
 public class PeopleConverter {
 	private List<Person> people;
-	private ConfigJson configJson;
+	private Provider provider;
 
-	public PeopleConverter(ConfigJson configJson) {
+	public PeopleConverter(Provider provider) {
 		this.people = new ArrayList<Person>();
-		this.configJson = configJson;
+		this.provider = provider;
 	}
 
 	public void convert(Account account) {
@@ -21,7 +21,7 @@ public class PeopleConverter {
 				.getPeople()) {
 			Person person = new Person();
 			person.setId(unfuddlePerosn.getId());
-			String newUsername = configJson.lookupUsername(
+			String newUsername = provider.getConfigJson().lookupUsername(
 					unfuddlePerosn.getUsername(), unfuddlePerosn.getUsername());
 			person.setName(newUsername);
 			this.people.add(person);
