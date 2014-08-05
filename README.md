@@ -34,7 +34,7 @@ All, foreign keys are managed from the converter. However, a user named "unfuddl
     * component
     * milestone
     * comments
-    * ~~watcher~~ (does not exist in unfuddle?!)
+    * watcher / subscriptions
     * ~~voters~~ (does not exist in unfuddle?!)
 * Components
 * Meta

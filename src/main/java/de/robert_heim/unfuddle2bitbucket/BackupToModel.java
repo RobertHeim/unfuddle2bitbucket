@@ -25,6 +25,7 @@ import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Account;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.IntegerConverter;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Project;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Severity;
+import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Subscription;
 import de.robert_heim.unfuddle2bitbucket.model.unfuddle.Ticket;
 
 public class BackupToModel {
@@ -398,6 +399,23 @@ public class BackupToModel {
 				}
 			}
 
+			// watchers
+			{
+				List<String> watchers = new ArrayList<String>();
+				for (Subscription s : ticket.getSubscriptions()) {
+					Person p = findPersonById(s.getPersonId());
+					if (null == p) {
+						System.out
+								.println("WARNING: subscription skipped, because the person with id '"
+										+ s.getPersonId()
+										+ "' could not be found:");
+					} else {
+						watchers.add(p.getName());
+					}
+				}
+				i.setWatchers(watchers);
+			}
+
 			this.issues.add(i);
 			convertComments(ticket);
 		}
@@ -434,6 +452,10 @@ public class BackupToModel {
 		return id;
 	}
 
+	/**
+	 * @param id
+	 * @return the person or null
+	 */
 	public Person findPersonById(Integer id) {
 		if (null == people) {
 			return null;

@@ -51,6 +51,10 @@ public class Ticket {
 	@XmlElement(name = "comment")
 	private List<Comment> comments;
 
+	@XmlElementWrapper(name = "subscriptions")
+	@XmlElement(name = "subscription")
+	private List<Subscription> subscriptions;
+
 	public Ticket() {
 	}
 
@@ -173,4 +177,13 @@ public class Ticket {
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
+
+	public List<Subscription> getSubscriptions() {
+		return subscriptions;
+	}
+
+	public void setSubscriptions(List<Subscription> subscriptions) {
+		this.subscriptions = subscriptions;
+	}
+
 }
