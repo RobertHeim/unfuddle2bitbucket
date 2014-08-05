@@ -5,7 +5,8 @@ In unfuddle go to your project, hit "*Project settings*" and click on "*Request 
 
 ## 2) Convert the data
 
-```usage: unfuddleToBitbucket [-c <FILE>] [-fw] [-h] -i <FILE> -o <FILE> [-p] [-v]
+```
+usage: unfuddleToBitbucket [-c <FILE>] [-fw] [-h] -i <FILE> -o <FILE> [-p] [-v]
 Options:
     -c,--config-file <FILE>   The configuration file. See documentation at github for further
                               information.
