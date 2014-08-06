@@ -21,7 +21,6 @@ see [LICENCE.md](LICENCE.md) for the full licence-text.
 ## What is supported?
 
 * People (they are mappable to bitbucket-accounts)
-* Projects / Repository -> Only the 1st repository is converted, because Bitbucket can only import issues to a specific repository.
 * Components
 * Milestones
 * Versions
@@ -55,6 +54,7 @@ see [LICENCE.md](LICENCE.md) for the full licence-text.
     * ~~update ticket~~ Unfuddle puts the changes from the update in the description - this may contain emailaddresses as plaintext or sometimes the Names (not usernames) and other stuff... which makes it quite complicated to support it. A solution might parse the description-field. It may contain the changed field enclosed in  double-stars (\*\*)
 * ~~Links to Changesets from Tickets, Comments and Logs~~
 * ~~Associated Tickets~~
+* ~~Ticket Reports~~
 * Links to Tickets from anywhere (e.g. comments)
 
 ## Usage
