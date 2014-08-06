@@ -53,7 +53,7 @@ import de.robert_heim.unfuddle2bitbucket.model.bitbucket.DbJson;
  */
 public class UnfuddleToBitbucket {
 
-	private static final String APPLICATION_NAME = "unfuddleToBitbucket";
+	private static final String APPLICATION_NAME = "unfuddle2Bitbucket";
 	private static final String VERSION_FILE = "/version.properties";
 
 	public static void main(String[] args) {

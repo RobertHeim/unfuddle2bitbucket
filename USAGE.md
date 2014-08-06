@@ -5,8 +5,21 @@ In unfuddle go to your project, hit "*Project settings*" and click on "*Request 
 
 ## 2) Convert the data
 
+### Download
+
+Download the jar from the [release section](https://github.com/RobertHeim/unfuddle2bitbucket/releases). 
+
+
+### Example usage:
 ```
-usage: unfuddleToBitbucket [-c <FILE>] [-fw] [-h] -i <FILE> -o <FILE> [-p] [-v]
+java -jar unfuddle2bitbucket-0.1.0.jar -p -c config.json -i /path/to/backup.xml -o /path/to/output.zip
+Done. You can find the result in /path/to/output.zip
+```
+
+### Usage options
+
+```
+usage: unfuddle2Bitbucket [-c <FILE>] [-fw] [-h] -i <FILE> -o <FILE> [-p] [-v]
 Options:
     -c,--config-file <FILE>   The configuration file. See documentation at github for further
                               information.
@@ -18,13 +31,7 @@ Options:
     -v,--version              print the version
 ```
 
-### Example usage:
-```
-java -jar unfuddleTobitbucket -p -c config.json -i /path/to/backup.xml -o /path/to/output.zip
-Done. You can find the result in /path/to/output.zip
-```
-
-### Configuration
+#### Configuration
 You can specify a config-file in JSON-format. The following explains what you can do:
 
 * meta: some default values, they are all related to bitbucket (not unfuddle)
