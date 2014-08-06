@@ -1,6 +1,6 @@
 # Unfuddle2Bitbucket
 
-This program converts a backup.xml (Tickets, Milestones, etc.) created from Unfuddle to a JSON that can be importet by Bitbucket.
+This program converts a backup.xml (Tickets, Milestones, etc.) created by Unfuddle to a JSON that can be imported by Bitbucket.
 
 Repository: https://github.com/RobertHeim/unfuddle2bitbucket
 
@@ -14,9 +14,9 @@ Repository: https://github.com/RobertHeim/unfuddle2bitbucket
 
 ## License
 
-The Software is released under the MIT-Licence - so you can do what you want! If you like it consider DONATING to me via Paypal: robert@robert-heim.de . Thanks!
+The Software is released under the MIT-license - so you can do what you want! If you like it consider DONATING to me via Paypal: robert@robert-heim.de . Thanks!
 
-see [LICENCE.md](LICENCE.md) for the full licence-text.
+see [LICENSE.md](LICENSE.md) for the full license-text.
 
 ## What is supported?
 
